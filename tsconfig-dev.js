@@ -3,9 +3,11 @@
     "target": "es5",
     "module": "commonjs",
     "declaration": true,
-    "outDir": "./lib",
-    "strict": true
+    "outDir": "./dist",
+    "strict": true,
+    "sourceMap": true,
+    "jsx": "react"
   },
-  "include": ["src"],
+  "include": ["server","src"],
   "exclude": ["node_modules", "**/__tests__/*"]
 }
