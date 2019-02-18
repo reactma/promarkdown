@@ -1,10 +1,9 @@
 {
-  "name": "ProMarkdown",
-  "version": "0.0.1",
-  "main": "lib/index.js",
+  "name": "promarkdown",
+  "version": "0.0.3",
+  "main": "index.js",
   "types": "lib/index.d.ts",
   "description": "A professional grade react markdown editor, based CodeMirror, supporting search, replace, linenumber, key map, and most importantly YAML frontmatter.",
-  "main": "index.js",
   "author": "Reactma",
   "license": "MIT",
   "devDependencies": {
@@ -24,11 +23,16 @@
   "files": [
     "lib/**/*"
   ],
-  "prepare" : "yarn run build",
-  "prepublishOnly" : "yarn test && yarn run lint",
-  "preversion" : "yarn run lint",
-  "version" : "yarn run format && git add -A src",
-  "postversion" : "git push && git push --tags",
-  "keywords": ["Markdown", "Editor", "Prefessional", "Frontmatter", "React", "Reactma"],
-  "author": "Reactma"
+  "prepare": "yarn run build",
+  "prepublishOnly": "yarn test && yarn run lint",
+  "preversion": "yarn run lint",
+  "postversion": "git push && git push --tags",
+  "keywords": [
+    "Markdown",
+    "Editor",
+    "Prefessional",
+    "Frontmatter",
+    "React",
+    "Reactma"
+  ]
 }
