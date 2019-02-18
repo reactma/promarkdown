@@ -1,0 +1,8 @@
+{
+  "name": "ProMarkdown",
+  "version": "0.0.1",
+  "description": "A professional grade react markdown editor, based CodeMirror, supporting search, replace, linenumber, key map, and most importantly YAML frontmatter.",
+  "main": "index.js",
+  "author": "Reactma",
+  "license": "MIT"
+}
