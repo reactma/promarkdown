@@ -1,9 +1,7 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
+import 'codemirror/lib/codemirror.css'
 
-import Greeter from '../src/index'
+import EditorCore from '../src/index'
 
-ReactDOM.render(
-  <Greeter name="jack" />,
-  document.getElementById('root')
-)
+ReactDOM.render(<EditorCore />, document.getElementById('root'))

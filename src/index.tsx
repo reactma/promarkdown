@@ -1,9 +1,4 @@
 import * as React from 'react'
+import EditorCore from './EditorCore'
 
-interface IGreeterProps {
-  name: string
-}
-
-const Greeter = ( { name } : IGreeterProps ) => <div> {`Hello ${name}`}</div>
-
-export default Greeter
+export default EditorCore

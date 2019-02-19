@@ -6,8 +6,10 @@
     "outDir": "./dist",
     "strict": true,
     "sourceMap": true,
-    "jsx": "react"
+    "jsx": "react",
+    "noImplicitAny": false,
+    "strict": false
   },
-  "include": ["server","src"],
+  "include": ["server", "src"],
   "exclude": ["node_modules", "**/__tests__/*"]
 }

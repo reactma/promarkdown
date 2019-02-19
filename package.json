@@ -9,10 +9,12 @@
   "devDependencies": {
     "@types/jest": "^24.0.6",
     "clean-webpack-plugin": "^1.0.1",
+    "css-loader": "^2.1.0",
     "html-webpack-plugin": "^3.2.0",
     "jest": "^24.1.0",
     "prettier": "1.16.4",
     "rimraf": "^2.6.3",
+    "style-loader": "^0.23.1",
     "ts-jest": "^23.10.5",
     "ts-loader": "^5.3.3",
     "tslint": "^5.12.1",
@@ -24,13 +26,13 @@
     "webpack-dev-server": "^3.1.14"
   },
   "scripts": {
-    "clean": "rimraf dist doc",
+    "clean": "rimraf dist lib doc",
     "dev": "webpack-dev-server",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
-    "lint": "tslint -p tsconfig-lib.js",
+    "lint": "tslint -p tsconfig-lib.json",
     "test": "jest",
-    "doc": "typedoc -tsconfig tsconfig-lib.js ./src",
-    "compile": "tsc -p tsconfig-lib.js",
+    "doc": "typedoc -tsconfig tsconfig-lib.json ./src",
+    "compile": "tsc -p tsconfig-lib.json",
     "build": "npm-run-all clean compile"
   },
   "files": [
@@ -49,8 +51,10 @@
     "Reactma"
   ],
   "dependencies": {
+    "@types/codemirror": "^0.0.72",
     "@types/react": "^16.8.3",
     "@types/react-dom": "^16.8.2",
+    "codemirror": "^5.43.0",
     "npm-run-all": "^4.1.5",
     "react": "^16.8.2",
     "react-dom": "^16.8.2"
