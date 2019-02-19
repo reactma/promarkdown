@@ -44,7 +44,7 @@ const defaultOptions: CodeMirror.EditorConfiguration &
   gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
   scrollbarStyle: 'simple',
   highlightSelectionMatches: { showToken: /\w/, annotateScrollbar: true },
-  extraKeys: { 'Alt-F': 'findPersistent', 'Shift-Ctrl-F': 'replaceShift' }
+  extraKeys: { 'Alt-F': 'findPersistent', 'Ctrl-M': 'replaceShift' }
 }
 
 interface IEditorProps {
@@ -68,14 +68,14 @@ const mapHandlers = (props: IEditorProps, cm: CodeMirror.Editor) => {
 }
 
 const EditorCore = (props: IEditorProps) => {
-  let cm: CodeMirror.EditorFromTextArea | null = null
+  let cm: CodeMirror.Editor | null = null
 
   // Mount codemirror to textarea
 
   useEffect(() => {
     const { options } = props
 
-    cm = CodeMirror.fromTextArea(textarea.current, {
+    cm = CodeMirror(cmEle.current, {
       ...defaultOptions,
       ...options
     })
@@ -86,12 +86,12 @@ const EditorCore = (props: IEditorProps) => {
 
     // Remove the editor, and restore the original textarea (with the editor's current content).
 
-    return () => cm.toTextArea()
+    //    return () => cm.toTextArea()
   })
 
-  const textarea: any | null = useRef(null)
+  const cmEle: any | null = useRef(null)
 
-  return <textarea ref={textarea} style={{ display: 'none' }} />
+  return <div ref={cmEle} />
 }
 
 export default EditorCore
