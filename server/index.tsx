@@ -92,6 +92,11 @@ for (var i = 0; i < items.length; i++) {
 See http://github.github.com/github-flavored-markdown/.
 `
 const options = { value }
-const props = { onChange, options }
+const locale = 'zh-CN'
+const intlPhrases = {
+  'Search:' : '搜索:>>>>',
+}
+
+const props = { onChange, options, locale, intlPhrases }
 
 ReactDOM.render(<EditorCore {...props} />, document.getElementById('root'))

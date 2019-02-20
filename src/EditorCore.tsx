@@ -48,9 +48,26 @@ const defaultOptions: CodeMirror.EditorConfiguration &
 }
 
 interface IEditorProps {
-  className?: string
+  className?: string,
+  locale?: string,
+  intlPhrases?: any,
   options?: CodeMirror.EditorConfiguration
   [handlers: string]: any // Handler props that will be mapped to CodeMirror's handlers. Should aways start with on
+}
+
+const cnPhrases = {
+  'Search:' : '搜索:',
+  '(Use /re/ syntax for regexp search)': '(使用 /re/ 语法进行正则式搜索)',
+  'Replace?': '替换？',
+  'Replace:': '替换:',
+  'Replace all:': '全部替换:',
+  'With:': '为:',
+  'Yes:': '是',
+  'No:': '否',
+  'All:': '所有',
+  'Stop:': '停止',
+  'Jump to line:': '跳转到行:',
+  '(Use line:column or scroll% syntax)': '(使用 行号:列号 或 滚动比例% 语法)'
 }
 
 const mapHandlers = (props: IEditorProps, cm: CodeMirror.Editor) => {
@@ -73,11 +90,23 @@ const EditorCore = (props: IEditorProps) => {
   // Mount codemirror to textarea
 
   useEffect(() => {
-    const { options } = props
+    const { options, intlPhrases, locale } = props
+
+    const composedOptions = intlPhrases ?
+                            ( locale === 'zh-CN' ?
+                              { ...options,
+                                phrases : { ...cnPhrases, ...intlPhrases }
+                              } :
+                              { ...options,
+                                phrases : intlPhrases
+                              } ) :
+                            ( locale === 'zh-CN' ?
+                              { ...options, phrases: cnPhrases } :
+                              { ...options } )
 
     cm = CodeMirror(cmEle.current, {
       ...defaultOptions,
-      ...options
+      ...composedOptions
     })
 
     if (options && options.value) cm.setValue(options.value)
