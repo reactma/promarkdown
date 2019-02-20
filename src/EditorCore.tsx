@@ -47,13 +47,15 @@ const defaultOptions: CodeMirror.EditorConfiguration &
   extraKeys: { 'Alt-F': 'findPersistent', 'Ctrl-M': 'replaceShift' }
 }
 
-interface IEditorProps {
+export interface IEditorProps {
   className?: string,
   locale?: string,
   intlPhrases?: any,
   options?: CodeMirror.EditorConfiguration
   [handlers: string]: any // Handler props that will be mapped to CodeMirror's handlers. Should aways start with on
 }
+
+//Simplified Chinese phrases for search/replace/go-to-line dialogs
 
 const cnPhrases = {
   'Search:' : '搜索:',
@@ -70,12 +72,17 @@ const cnPhrases = {
   '(Use line:column or scroll% syntax)': '(使用 行号:列号 或 滚动比例% 语法)'
 }
 
+/* Map user defined codemirror event handlers to CodeMirror cm.on( eventName ... ) event lisener
+ * For example onChange is mapped to on(change, ...) of CodeMirror
+ */
+
 const mapHandlers = (props: IEditorProps, cm: CodeMirror.Editor) => {
   const handlerNames = Object.keys(props).filter(prop => {
     return /^on+/.test(prop)
   })
 
   // map EditorCore's event handler defined in props to CodeMirror's event handler
+
   for (let handlerName of handlerNames) {
     const cmEvent = handlerName.replace(/^on[A-Z]/g, s =>
       s.slice(2).toLowerCase()
@@ -85,11 +92,17 @@ const mapHandlers = (props: IEditorProps, cm: CodeMirror.Editor) => {
 }
 
 const EditorCore = (props: IEditorProps) => {
+
   let cm: CodeMirror.Editor | null = null
 
-  // Mount codemirror to textarea
+  // This editor is intended for markdown only, supporting yaml-frontmatter / toml-frontmatter / json-frontmatter
+  
+  if( props.options && props.options.mode && props.options.mode !== 'yaml-frontmatter' )
+
+    throw new Error( 'Current only supports yaml-frontmatter mode. tom-frontmatter and json-fromtmatter to be added soon' )
 
   useEffect(() => {
+
     const { options, intlPhrases, locale } = props
 
     const composedOptions = intlPhrases ?

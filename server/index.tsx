@@ -91,7 +91,7 @@ for (var i = 0; i < items.length; i++) {
 
 See http://github.github.com/github-flavored-markdown/.
 `
-const options = { value }
+const options = { value, mode: 'yaml-frontmatter' }
 const locale = 'zh-CN'
 const intlPhrases = {
   'Search:' : '搜索:>>>>',
