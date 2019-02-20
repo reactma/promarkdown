@@ -1,27 +1,31 @@
 import * as React from 'react'
 
-import * as CodeMirror from 'codemirror'
-import 'codemirror/mode/markdown/markdown'
-import 'codemirror/mode/gfm/gfm'
-import 'codemirror/mode/yaml/yaml'
-import 'codemirror/addon/scroll/simplescrollbars'
-import 'codemirror/addon/scroll/annotatescrollbar'
-import 'codemirror/addon/search/search'
-import 'codemirror/addon/search/searchcursor'
-import 'codemirror/addon/search/jump-to-line'
-import 'codemirror/addon/search/match-highlighter'
-import 'codemirror/addon/search/matchesonscrollbar'
-import 'codemirror/addon/display/fullscreen'
-import 'codemirror/mode/yaml-frontmatter/yaml-frontmatter'
-import 'codemirror/addon/fold/markdown-fold'
-import 'codemirror/addon/selection/active-line'
-import 'codemirror/addon/mode/overlay'
-import 'codemirror/addon/dialog/dialog'
-import 'codemirror/addon/edit/closetag'
-import 'codemirror/addon/edit/continuelist'
-import 'codemirror/addon/fold/foldcode'
-import 'codemirror/addon/fold/foldgutter'
-import 'codemirror/mode/meta'
+import * as CodeMirror from 'codemirror-frontmatters'
+import 'codemirror-frontmatters/mode/markdown/markdown'
+import 'codemirror-frontmatters/mode/gfm/gfm'
+import 'codemirror-frontmatters/mode/yaml/yaml'
+import 'codemirror-frontmatters/mode/toml/toml'
+import 'codemirror-frontmatters/mode/javascript/javascript'
+import 'codemirror-frontmatters/addon/scroll/simplescrollbars'
+import 'codemirror-frontmatters/addon/scroll/annotatescrollbar'
+import 'codemirror-frontmatters/addon/search/search'
+import 'codemirror-frontmatters/addon/search/searchcursor'
+import 'codemirror-frontmatters/addon/search/jump-to-line'
+import 'codemirror-frontmatters/addon/search/match-highlighter'
+import 'codemirror-frontmatters/addon/search/matchesonscrollbar'
+import 'codemirror-frontmatters/addon/display/fullscreen'
+import 'codemirror-frontmatters/mode/yaml-frontmatter/yaml-frontmatter'
+import 'codemirror-frontmatters/mode/toml-frontmatter/toml-frontmatter'
+import 'codemirror-frontmatters/mode/json-frontmatter/json-frontmatter'
+import 'codemirror-frontmatters/addon/fold/markdown-fold'
+import 'codemirror-frontmatters/addon/selection/active-line'
+import 'codemirror-frontmatters/addon/mode/overlay'
+import 'codemirror-frontmatters/addon/dialog/dialog'
+import 'codemirror-frontmatters/addon/edit/closetag'
+import 'codemirror-frontmatters/addon/edit/continuelist'
+import 'codemirror-frontmatters/addon/fold/foldcode'
+import 'codemirror-frontmatters/addon/fold/foldgutter'
+import 'codemirror-frontmatters/mode/meta'
 
 const { useEffect, useRef } = React
 
@@ -96,10 +100,10 @@ const EditorCore = (props: IEditorProps) => {
   let cm: CodeMirror.Editor | null = null
 
   // This editor is intended for markdown only, supporting yaml-frontmatter / toml-frontmatter / json-frontmatter
-  
-  if( props.options && props.options.mode && props.options.mode !== 'yaml-frontmatter' )
 
-    throw new Error( 'Current only supports yaml-frontmatter mode. tom-frontmatter and json-fromtmatter to be added soon' )
+  if( props.options && props.options.mode && props.options.mode !== 'yaml-frontmatter' && props.options.mode != 'toml-frontmatter' && props.options.mode !== 'json-frontmatter' )
+
+    throw new Error( 'Current only supports yaml-frontmatter mode, tom-frontmatter and json-fromtmatter modes, with gfm as main mode' )
 
   useEffect(() => {
 

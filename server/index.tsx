@@ -1,11 +1,11 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import 'codemirror/lib/codemirror.css'
-import 'codemirror/addon/fold/foldgutter.css'
-import 'codemirror/addon/scroll/simplescrollbars.css'
-import 'codemirror/addon/dialog/dialog.css'
-import 'codemirror/addon/search/matchesonscrollbar.css'
-import 'codemirror/addon/search/matchesonscrollbar.css'
+import 'codemirror-frontmatters/lib/codemirror.css'
+import 'codemirror-frontmatters/addon/fold/foldgutter.css'
+import 'codemirror-frontmatters/addon/scroll/simplescrollbars.css'
+import 'codemirror-frontmatters/addon/dialog/dialog.css'
+import 'codemirror-frontmatters/addon/search/matchesonscrollbar.css'
+import 'codemirror-frontmatters/addon/search/matchesonscrollbar.css'
 import '../src/matchhighlighter.css'
 
 import EditorCore from '../src/index'
@@ -91,7 +91,7 @@ for (var i = 0; i < items.length; i++) {
 
 See http://github.github.com/github-flavored-markdown/.
 `
-const options = { value, mode: 'yaml-frontmatter' }
+const options = { value, mode: 'toml-frontmatter' }
 const locale = 'zh-CN'
 const intlPhrases = {
   'Search:' : '搜索:>>>>',

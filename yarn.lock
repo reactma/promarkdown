@@ -1143,10 +1143,10 @@ code-point-at@^1.0.0:
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
   integrity sha1-DQcLTQQ6W+ozovGkDi7bPZpMz3c=
 
-codemirror@^5.43.0:
-  version "5.43.0"
-  resolved "https://registry.npmjs.org/codemirror/-/codemirror-5.43.0.tgz#2454b5e0f7005dc9945ab7b0d9594ccf233da040"
-  integrity sha512-mljwQWUaWIf85I7QwTBryF2ASaIvmYAL4s5UCanCJFfKeXOKhrqdHWdHiZWAMNT+hjLTCnVx2S/SYTORIgxsgA==
+codemirror-frontmatters@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/codemirror-frontmatters/-/codemirror-frontmatters-1.0.1.tgz#c54fcc5052c743f156c9a10636e2b0f2fdab9a4d"
+  integrity sha512-91vBl+CEhGHrqiaUxzD1xHzZepoDjk7kidb1zazxfYn+szSujcjX9u+qdaH0TV6U2pUAAToeRCnk9/KdsOpgmQ==
 
 collection-visit@^1.0.0:
   version "1.0.0"
