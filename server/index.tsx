@@ -91,7 +91,7 @@ See http://github.github.com/github-flavored-markdown/.
 `
 let cm: CodeMirror.Editor
 
-const options = { value, mode: 'toml-frontmatter' }
+const options = { value, mode: 'yaml-frontmatter' }
 const locale = 'zh-CN'
 const intlPhrases = {
   'Search:' : '搜索:>>>>',

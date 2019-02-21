@@ -102,7 +102,7 @@ const mapHandlers = (props: IEditorProps, cm: CodeMirror.Editor) => {
 
 const EditorCore = (props: IEditorProps) => {
 
-  let cm: CodeMirror.Editor | null = null
+//  let cm: CodeMirror.Editor | null = null
 
   // This editor is intended for markdown only, supporting yaml-frontmatter / toml-frontmatter / json-frontmatter
 
@@ -126,7 +126,7 @@ const EditorCore = (props: IEditorProps) => {
                               { ...options, phrases: cnPhrases } :
                               { ...options } )
 
-    cm = CodeMirror(cmEle.current, {
+    const cm = CodeMirror(cmEle.current, {
       ...defaultOptions,
       ...composedOptions
     })
