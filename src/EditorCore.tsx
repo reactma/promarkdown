@@ -54,9 +54,12 @@ const defaultOptions: CodeMirror.EditorConfiguration &
 }
 
 export interface IEditorProps {
-  className?: string,
-  locale?: string,
-  intlPhrases?: any,
+  atMounted?: ( editor: CodeMirror.Editor ) => any
+  atUnmounted?: ( editor: CodeMirror.Editor ) => any
+  atChange? : ( editor: CodeMirror.Editor,data: CodeMirror.EditorChange, value: string) => any // if atChange is defined, it will override onChange handler
+  className?: string
+  locale?: string
+  intlPhrases?: any
   options?: CodeMirror.EditorConfiguration
   [handlers: string]: any // Handler props that will be mapped to CodeMirror's handlers. Should aways start with on
 }
@@ -109,7 +112,7 @@ const EditorCore = (props: IEditorProps) => {
 
   useEffect(() => {
 
-    const { options, intlPhrases, locale } = props
+    const { options, intlPhrases, locale, atMounted, atUnmounted, atChange } = props
 
     const composedOptions = intlPhrases ?
                             ( locale === 'zh-CN' ?
@@ -128,13 +131,16 @@ const EditorCore = (props: IEditorProps) => {
       ...composedOptions
     })
 
-    if (options && options.value) cm.setValue(options.value)
+    if (options && options.value)
+      cm.setValue(options.value)
 
-    mapHandlers(props, cm)
+    const composedProps = atChange ? { ...props, onChange: ( editor: CodeMirror.Editor, change: CodeMirror.EditorChange ) => atChange( cm, change, editor.getDoc().getValue() ) } : props
 
-    // Remove the editor, and restore the original textarea (with the editor's current content).
+    mapHandlers(composedProps, cm)
 
-    //    return () => cm.toTextArea()
+    atMounted && atMounted( cm )
+
+    return () => atUnmounted && atUnmounted( cm )
   })
 
   const cmEle: any | null = useRef(null)

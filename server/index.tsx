@@ -10,8 +10,6 @@ import '../src/matchhighlighter.css'
 
 import EditorCore from '../src/index'
 
-const onChange = (instance: any, change: any) => console.log(change)
-
 const value = `
 ---
 receipt:     Oz-Ware Purchase Invoice
@@ -91,12 +89,22 @@ for (var i = 0; i < items.length; i++) {
 
 See http://github.github.com/github-flavored-markdown/.
 `
+let cm: CodeMirror.Editor
+
 const options = { value, mode: 'toml-frontmatter' }
 const locale = 'zh-CN'
 const intlPhrases = {
   'Search:' : '搜索:>>>>',
 }
 
-const props = { onChange, options, locale, intlPhrases }
+const atMounted = (editor: CodeMirror.Editor) => console.log( 'mounted ', editor)
+const atUnmounted = (editor: CodeMirror.Editor) => console.log( 'unmounted ', editor)
+const onChange = (editor: CodeMirror.Editor,
+                  change: CodeMirror.EditorChange) => console.log('onChange ', editor, change)
+
+const atChange = (editor: CodeMirror.Editor, change: CodeMirror.EditorChange, value: string) =>
+  console.log('at change', editor, change, value)
+
+const props = { options, locale, intlPhrases, atMounted, atUnmounted, onChange, atChange }
 
 ReactDOM.render(<EditorCore {...props} />, document.getElementById('root'))
