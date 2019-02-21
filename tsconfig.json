@@ -1,0 +1,24 @@
+//*** configuration for compiling the library ****
+
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "declaration": true,
+    "outDir": "./lib",
+    "strict": true,
+    "sourceMap": true,
+    "jsx": "react",
+    "stripInternal": true,
+    "removeComments": true,
+    "skipLibCheck": true,
+    "lib": ["es2015", "es2017", "dom"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "**/__tests__/*"],
+  "typedocOptions": {
+    "mode": "file",
+    "out": "docs"
+  },
+  "types": ["React", "CodeMirror"]
+}

@@ -1,4 +1,4 @@
-import * as React from 'react'
+import ProMarkdown from './ProMarkdown'
 import EditorCore from './EditorCore'
 
-export default EditorCore
+export { ProMarkdown as default, EditorCore }

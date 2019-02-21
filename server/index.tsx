@@ -6,9 +6,11 @@ import 'codemirror/addon/scroll/simplescrollbars.css'
 import 'codemirror/addon/dialog/dialog.css'
 import 'codemirror/addon/search/matchesonscrollbar.css'
 import 'codemirror/addon/search/matchesonscrollbar.css'
-import '../src/matchhighlighter.css'
 
-import EditorCore from '../src/index'
+import '../src/matchhighlighter.css'
+import '../src/menu.css'
+
+import ProMarkdown, { EditorCore } from '../src/index'
 
 const value = `
 ---
@@ -91,7 +93,7 @@ See http://github.github.com/github-flavored-markdown/.
 `
 let cm: CodeMirror.Editor
 
-const options = { value, mode: 'yaml-frontmatter' }
+const options = { value, mode: 'toml-frontmatter' }
 const locale = 'zh-CN'
 const intlPhrases = {
   'Search:' : '搜索:>>>>',
@@ -107,4 +109,9 @@ const atChange = (editor: CodeMirror.Editor, change: CodeMirror.EditorChange, va
 
 const props = { options, locale, intlPhrases, atMounted, atUnmounted, onChange, atChange }
 
-ReactDOM.render(<EditorCore {...props} />, document.getElementById('root'))
+const proMarkdownProps = {
+  initialValue: value,
+}
+// ReactDOM.render(<EditorCore {...props} />, document.getElementById('root'))
+
+ReactDOM.render(<ProMarkdown {...proMarkdownProps} />, document.getElementById('root'))

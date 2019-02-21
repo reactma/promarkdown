@@ -61,6 +61,8 @@ export interface IEditorProps {
   locale?: string
   intlPhrases?: any
   options?: CodeMirror.EditorConfiguration
+  width?: number | string | null
+  height?: number | string | null
   [handlers: string]: any // Handler props that will be mapped to CodeMirror's handlers. Should aways start with on
 }
 
@@ -102,7 +104,10 @@ const mapHandlers = (props: IEditorProps, cm: CodeMirror.Editor) => {
 
 const EditorCore = (props: IEditorProps) => {
 
-//  let cm: CodeMirror.Editor | null = null
+  //  let cm: CodeMirror.Editor | null = null
+
+
+  const [ mounted, setMounted ] = React.useState( null )
 
   // This editor is intended for markdown only, supporting yaml-frontmatter / toml-frontmatter / json-frontmatter
 
@@ -126,21 +131,31 @@ const EditorCore = (props: IEditorProps) => {
                               { ...options, phrases: cnPhrases } :
                               { ...options } )
 
-    const cm = CodeMirror(cmEle.current, {
+
+//    debugger
+
+    // Check cm already mounted. If yes, use already mounted cm
+    const cm = mounted ? mounted : CodeMirror(cmEle.current, {
       ...defaultOptions,
       ...composedOptions
     })
 
+    setMounted( cm )
+
+//    console.log( cm )
     if (options && options.value)
       cm.setValue(options.value)
+    const width = props.width || null
+    const height = props.height || null
+    cm.setSize( width, height )
 
     const composedProps = atChange ? { ...props, onChange: ( editor: CodeMirror.Editor, change: CodeMirror.EditorChange ) => atChange( cm, change, editor.getDoc().getValue() ) } : props
 
+    console.log( 'in use effect' )
     mapHandlers(composedProps, cm)
-
     atMounted && atMounted( cm )
 
-    return () => atUnmounted && atUnmounted( cm )
+//    return () => atUnmounted && atUnmounted( cm )
   })
 
   const cmEle: any | null = useRef(null)
