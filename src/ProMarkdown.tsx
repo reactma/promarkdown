@@ -86,13 +86,18 @@ const ProMarkdown = ( props: IProMarkdownProps ) => {
 
   //debugger
 
-  const [editorState, setEditorState ] = React.useState('editing')
 
   const [scroll, setScroll] = React.useState({ left: 0, top: 0 })
 
   const [cursor, setCursor] = React.useState({ line: 0, ch: 0 })
 
   const [value, setValue] = React.useState( props.initialValue || '' )
+
+  // false - normal editing, true - fullscreen
+  const [fullScreen, setFullScreen] = React.useState(false)
+
+  // 'editing' / 'preview' / 'splitpane' only when fullscreen
+  const [editorState, setEditorState ] = React.useState('editing')
 
   const defaultMenu: IProMarkdownMenuItem [] = [
     {
@@ -110,8 +115,7 @@ const ProMarkdown = ( props: IProMarkdownProps ) => {
       name: 'fullscreen',
       tip: 'Fullscreen',
       onClick : () => {
-        console.log('fullscreen clicked')
-        setEditorState( transState( editorState as EditorState, 'fullscreen' ) )
+        setFullScreen( !fullScreen )
       }
     },
     {
@@ -192,6 +196,9 @@ const ProMarkdown = ( props: IProMarkdownProps ) => {
     height: isFullScreen ? '98vh' : props.height || '60vh'
   }
 
+
+  const wrapperClassName = 'pro-markdown ' + ( fullScreen ? 'pro-markdown-fullscreen' : 'pro-markdown-normal' )
+
   let editor : React.ComponentElement<any, any>
 
     let style = {}
@@ -215,7 +222,7 @@ const ProMarkdown = ( props: IProMarkdownProps ) => {
     }
 
 
-    return <div style={style} className={className}>
+    return <div style={style} className={wrapperClassName}>
     {menu}
     {editor}
     </div>
