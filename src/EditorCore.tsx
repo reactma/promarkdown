@@ -106,10 +106,10 @@ const mapHandlers = (props: IEditorProps, cm: CodeMirror.Editor) => {
   }
 }
 
-const EditorCore = React.memo( (props: IEditorProps) => {
+const EditorCore = React.memo((props: IEditorProps) => {
   //  let cm: CodeMirror.Editor | null = null
 
-  const [mounted, setMounted] = React.useState< CodeMirror.Editor | null > (null)
+  const [mounted, setMounted] = React.useState<CodeMirror.Editor | null>(null)
 
   // This editor is intended for markdown only, supporting yaml-frontmatter / toml-frontmatter / json-frontmatter
 
@@ -145,35 +145,33 @@ const EditorCore = React.memo( (props: IEditorProps) => {
     //    debugger
 
     // Check cm already mounted. If yes, use already mounted cm
-    console.log( 'mounted ', mounted )
-    const cm: CodeMirror.Editor = mounted || CodeMirror(cmEle.current, {
-      ...defaultOptions,
-      ...composedOptions
-    })
+    console.log('mounted ', mounted)
+    const cm: CodeMirror.Editor =
+      mounted ||
+      CodeMirror(cmEle.current, {
+        ...defaultOptions,
+        ...composedOptions
+      })
 
-    if( !mounted ) {
+    if (!mounted) {
       setMounted(cm)
 
       //    console.log( cm )
       if (options && options.value) cm.setValue(options.value)
-      const width = props.width || null
-      const height = props.height || null
-      cm.setSize(width, height)
 
       const composedProps = atChange
-                          ? {
-                            ...props,
-                            onChange: (
-                              editor: CodeMirror.Editor,
-                              change: CodeMirror.EditorChange
-                            ) => atChange(cm, change, editor.getDoc().getValue())
-                          }
-                          : props
+        ? {
+          ...props,
+          onChange: (
+            editor: CodeMirror.Editor,
+            change: CodeMirror.EditorChange
+          ) => atChange(cm, change, editor.getDoc().getValue())
+        }
+        : props
 
       console.log('in use effect')
       mapHandlers(composedProps, cm)
       atMounted && atMounted(cm)
-
     }
     return () => atUnmounted && atUnmounted(cm)
   })
@@ -181,6 +179,6 @@ const EditorCore = React.memo( (props: IEditorProps) => {
   const cmEle: any | null = useRef(null)
 
   return <div ref={cmEle} />
-} )
+})
 
 export default EditorCore

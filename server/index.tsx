@@ -9,6 +9,7 @@ import 'codemirror/addon/search/matchesonscrollbar.css'
 
 import '../src/matchhighlighter.css'
 import '../src/menu.css'
+import '../src/gitmarkdown.css'
 
 import ProMarkdown, { EditorCore } from '../src/index'
 
@@ -96,22 +97,37 @@ let cm: CodeMirror.Editor
 const options = { value, mode: 'toml-frontmatter' }
 const locale = 'zh-CN'
 const intlPhrases = {
-  'Search:' : '搜索:>>>>',
+  'Search:': '搜索:>>>>'
 }
 
-const atMounted = (editor: CodeMirror.Editor) => console.log( 'mounted ', editor)
-const atUnmounted = (editor: CodeMirror.Editor) => console.log( 'unmounted ', editor)
-const onChange = (editor: CodeMirror.Editor,
-                  change: CodeMirror.EditorChange) => console.log('onChange ', editor, change)
+const atMounted = (editor: CodeMirror.Editor) => console.log('mounted ', editor)
+const atUnmounted = (editor: CodeMirror.Editor) =>
+  console.log('unmounted ', editor)
+const onChange = (editor: CodeMirror.Editor, change: CodeMirror.EditorChange) =>
+  console.log('onChange ', editor, change)
 
-const atChange = (editor: CodeMirror.Editor, change: CodeMirror.EditorChange, value: string) =>
-  console.log('at change', editor, change, value)
+const atChange = (
+  editor: CodeMirror.Editor,
+  change: CodeMirror.EditorChange,
+  value: string
+) => console.log('at change', editor, change, value)
 
-const props = { options, locale, intlPhrases, atMounted, atUnmounted, onChange, atChange }
+const props = {
+  options,
+  locale,
+  intlPhrases,
+  atMounted,
+  atUnmounted,
+  onChange,
+  atChange
+}
 
 const proMarkdownProps = {
-  initialValue: value,
+  initialValue: value
 }
 // ReactDOM.render(<EditorCore {...props} />, document.getElementById('root'))
 
-ReactDOM.render(<ProMarkdown {...proMarkdownProps} />, document.getElementById('root'))
+ReactDOM.render(
+  <ProMarkdown {...proMarkdownProps} />,
+  document.getElementById('root')
+)

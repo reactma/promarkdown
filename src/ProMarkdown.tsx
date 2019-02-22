@@ -4,7 +4,7 @@ import EditorCore from './EditorCore'
 
 import MenuItem from './MenuItem'
 
-import transformer from './frontmatterTransformer'
+import markdownTransformer from './frontmatterTransformer'
 
 import { debug } from 'util'
 
@@ -25,19 +25,12 @@ interface IProMarkdownMenuItem {
   onClick?: (name: string, state: string) => void
 }
 
-export interface ITransMarked {
-  markdown: string
-  [extra: string] : any
-}
-
 interface IProMarkdownProps {
   className?: string
   initialValue?: string
   mode?: 'yaml-frontmatter' | 'toml-frontmatter' | 'json-frontmatter'
   menu?: IProMarkdownMenuItem[]
-  width?: number | string
-  height?: number | string
-  transformer?: ( from: string ) => string
+  markdownTransformer?: (from: string) => string
 }
 
 const EditorStates = {
@@ -46,24 +39,24 @@ const EditorStates = {
   splitpane: 'splitpane'
 }
 
-const ProMarkdown = React.memo( (props: IProMarkdownProps) => {
+const ProMarkdown = (props: IProMarkdownProps) => {
   //debugger
 
   const [scroll, setScroll] = React.useState({ left: 0, top: 0 })
 
   const [cursor, setCursor] = React.useState({ line: 0, ch: 0 })
 
-  const [value, setValue] = React.useState< string >(props.initialValue || '')
+  const [value, setValue] = React.useState<string>(props.initialValue || '')
 
-  const [codemirror, setCodemirror] = React.useState< CodeMirror.Editor | null >( null )
+  const [codemirror, setCodemirror] = React.useState<CodeMirror.Editor | null>(
+    null
+  )
 
   // false - normal editing, true - fullscreen
   const [fullScreen, setFullScreen] = React.useState(false)
 
   // 'editing' / 'preview' / 'splitpane' only when fullscreen
-  const [editorState, setEditorState ] = React.useState< string >('editing')
-
-  let forLivePreview: string = ''
+  const [editorState, setEditorState] = React.useState<string>('editing')
 
   const savePosition = () => {
     if (codemirror) {
@@ -77,9 +70,8 @@ const ProMarkdown = React.memo( (props: IProMarkdownProps) => {
 
   // Menu iterm interactive handlers
   const iHandlers = {
-
     preview: () => {
-      if( editorState === EditorStates.preview )
+      if (editorState === EditorStates.preview)
         setEditorState(EditorStates.editing)
       else {
         savePosition()
@@ -88,38 +80,47 @@ const ProMarkdown = React.memo( (props: IProMarkdownProps) => {
     },
 
     fullscreen: () => {
-      if( editorState === EditorStates.splitpane ) {
+      console.log('before', fullScreen)
+      if (editorState === EditorStates.editing) {
+        savePosition()
+      }
+
+      if (editorState === EditorStates.splitpane) {
         savePosition()
         setEditorState(EditorStates.editing)
       }
-      setFullScreen( !fullScreen )
+
+      setFullScreen(!fullScreen)
+      console.log('set to', !fullScreen)
     },
 
     splitpane: () => {
-      if( fullScreen ) {
+      if (editorState === EditorStates.splitpane) {
         savePosition()
-        const newState = editorState === EditorStates.splitpane ? EditorStates.editing : EditorStates.splitpane
-        setEditorState(newState)
+        setEditorState(EditorStates.editing)
+        return
       }
-    }
 
+      if (!fullScreen) setFullScreen(true)
+
+      if (editorState === EditorStates.editing) savePosition()
+
+      setEditorState(EditorStates.splitpane)
+    }
   }
 
-  const defaultMenu: IProMarkdownMenuItem [] = [
+  const defaultMenu: IProMarkdownMenuItem[] = [
     {
       name: 'preview',
-      tip: 'Preview',
-      onClick: iHandlers.preview
+      tip: 'Preview'
     },
     {
       name: 'splitpane',
-      tip: 'Edit & live preview',
-      onClick: iHandlers.splitpane
+      tip: 'Edit & live preview'
     },
     {
       name: 'fullscreen',
-      tip: 'Fullscreen',
-      onClick : iHandlers.fullscreen
+      tip: 'Fullscreen'
     },
     {
       name: '|',
@@ -137,34 +138,46 @@ const ProMarkdown = React.memo( (props: IProMarkdownProps) => {
     props.menu && props.menu.length > 0 ? props.menu : defaultMenu
 
   const atMounted = (cm: CodeMirror.Editor) => {
-
-    setCodemirror( cm )
+    setCodemirror(cm)
     //    console.log('cursor at mount', cursor)
     cm.scrollTo(scroll.left, scroll.top)
     cm.getDoc().setCursor(cursor.line, cursor.ch)
     cm.focus()
-
-    forLivePreview = value
-
   }
 
   const atUnmounted = (cm: CodeMirror.Editor) => {
     setValue(cm.getDoc().getValue())
   }
 
-  const atChange = (cm: CodeMirror.Editor, change: CodeMirror.EditorChange, value: string) => {
-
-    setValue( value )
-
+  const atChange = (
+    cm: CodeMirror.Editor,
+    change: CodeMirror.EditorChange,
+    value: string
+  ) => {
+    setValue(value)
   }
 
   const menu = (
     <div className='pro-markdown-menu'>
-      {' '}
       {menuItem.map((item: IProMarkdownMenuItem, index: number) => {
+        const { name } = item
+
+        const state =
+          name === 'fullscreen'
+            ? fullScreen
+              ? 'selected'
+              : 'enabled'
+            : editorState === name
+              ? 'selected'
+              : 'enabled'
+
         return (
           <span key={index} className='pro-markdown-icon-wrap'>
-            <MenuItem {...item} />{' '}
+            {name === '|' ? (
+              <MenuItem {...item} />
+            ) : (
+                <MenuItem {...item} onClick={iHandlers[name]} state={state} />
+              )}
           </span>
         )
       })}
@@ -178,75 +191,72 @@ const ProMarkdown = React.memo( (props: IProMarkdownProps) => {
     },
     atMounted,
     atUnmounted,
-    atChange,
-    width: fullScreen ? '100%' : props.width || null,
-    height: fullScreen ? '98vh' : props.height || '60vh'
+    atChange
   }
 
+  const wrapperClassName =
+    'pro-markdown ' +
+    (fullScreen ? 'pro-markdown-fullscreen' : 'pro-markdown-normal')
 
-  const wrapperClassName = 'pro-markdown ' + ( fullScreen ? 'pro-markdown-fullscreen' : 'pro-markdown-normal' )
-
-  let editor : React.ComponentElement<any, any>
-
-  let style = {}
+  let editor: React.ComponentElement<any, any>
 
   console.log('editorState', editorState)
 
   switch (editorState) {
     case EditorStates.preview: {
-
       const source = value || ''
 
-      const trans = props.transformer ? props.transformer : transformer
+      const trans = props.markdownTransformer
+        ? props.markdownTransformer
+        : markdownTransformer
 
-      const transed = trans( source )
+      const transed = trans(source)
 
-      editor = <MarkdownPreview source={ transed } />
-      style = {
-      minHeight: '60vh'
-      }
-      return <div style={style} className={wrapperClassName}>
-      {menu}
-      {editor}
-      </div>
+      editor = <MarkdownPreview source={transed} />
+      return (
+        <div className={wrapperClassName}>
+          {menu}
+          {editor}
+        </div>
+      )
     }
 
     case EditorStates.splitpane: {
-
       const source = value || ''
 
-      const trans = props.transformer ? props.transformer : transformer
+      const trans = props.markdownTransformer
+        ? props.markdownTransformer
+        : markdownTransformer
 
-      const transed = trans( source )
+      const transed = trans(source)
 
-      console.log( transed )
-      const preview = <MarkdownPreview source={ transed } />
+      const preview = (
+        <MarkdownPreview className='markdown-body' source={transed} />
+      )
 
       editor = <EditorCore {...editorProps} />
 
-      return <div style={style} className={wrapperClassName}>
-        {menu}
-        <div className="pro-markdown-splitwrap">
-          <div className="pro-markdown-splitpane-editor">
-            {editor}
-          </div>
-          <div className="pro-markdown-splitpane-preview">
-            {preview}
-          </div>
+      return (
+        <div className={wrapperClassName}>
+          {menu}
+          <div className='pro-markdown-splitwrap'>
+            <div className='pro-markdown-splitpane-editor'>{editor}</div>
+            <div className='pro-markdown-splitpane-preview'>{preview}</div>
           </div>
         </div>
+      )
     }
 
     default: {
       editor = <EditorCore {...editorProps} />
-      return <div style={style} className={wrapperClassName}>
-      {menu}
-      {editor}
-      </div>
+      return (
+        <div className={wrapperClassName}>
+          {menu}
+          {editor}
+        </div>
+      )
     }
   }
-
-
-} )
+}
 
 export default ProMarkdown

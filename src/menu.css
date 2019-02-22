@@ -21,7 +21,11 @@
 }
 
 .menu-icon-enabled {
-    color: #666;
+    color: #333;
+}
+
+.menu-icon-selected {
+    color: darkblue;
 }
 
 .menu-icon-enabled:hover, .menu-icon-selected:hover {
@@ -40,7 +44,6 @@
 
 .pro-markdown-splitwrap {
     display: flex;
-    flow-direction: column;
 }
 
 .pro-markdown-splitpane-editor {
@@ -49,4 +52,27 @@
 
 .pro-markdown-splitpane-preview {
     width: 100%;
+}
+
+.pro-markdown-fullscreen {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 99;
+    width: 100%;
+}
+
+.pro-markdown-normal .CodeMirror {
+    min-height: 50vh;
+    max-height: 80vh;
+}
+
+.pro-markdown-fullscreen .CodeMirror {
+    height: 95vh;
+}
+
+.pro-markdown-preview {
+    overflow-y: scroll;
+    padding: 1em;
+    height: 92vh;
 }
