@@ -37,3 +37,16 @@
     border-bottom: 1px solid #ddd;
     background-color: #f7f7f7;
 }
+
+.pro-markdown-splitwrap {
+    display: flex;
+    flow-direction: column;
+}
+
+.pro-markdown-splitpane-editor {
+    width: 100%;
+}
+
+.pro-markdown-splitpane-preview {
+    width: 100%;
+}

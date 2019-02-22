@@ -54,9 +54,13 @@ const defaultOptions: CodeMirror.EditorConfiguration &
 }
 
 export interface IEditorProps {
-  atMounted?: ( editor: CodeMirror.Editor ) => any
-  atUnmounted?: ( editor: CodeMirror.Editor ) => any
-  atChange? : ( editor: CodeMirror.Editor,data: CodeMirror.EditorChange, value: string) => any // if atChange is defined, it will override onChange handler
+  atMounted?: (editor: CodeMirror.Editor) => any
+  atUnmounted?: (editor: CodeMirror.Editor) => any
+  atChange?: (
+    editor: CodeMirror.Editor,
+    data: CodeMirror.EditorChange,
+    value: string
+  ) => any // if atChange is defined, it will override onChange handler
   className?: string
   locale?: string
   intlPhrases?: any
@@ -69,7 +73,7 @@ export interface IEditorProps {
 //Simplified Chinese phrases for search/replace/go-to-line dialogs
 
 const cnPhrases = {
-  'Search:' : '搜索:',
+  'Search:': '搜索:',
   '(Use /re/ syntax for regexp search)': '(使用 /re/ 语法进行正则式搜索)',
   'Replace?': '替换？',
   'Replace:': '替换:',
@@ -102,65 +106,81 @@ const mapHandlers = (props: IEditorProps, cm: CodeMirror.Editor) => {
   }
 }
 
-const EditorCore = (props: IEditorProps) => {
-
+const EditorCore = React.memo( (props: IEditorProps) => {
   //  let cm: CodeMirror.Editor | null = null
 
-
-  const [ mounted, setMounted ] = React.useState( null )
+  const [mounted, setMounted] = React.useState< CodeMirror.Editor | null > (null)
 
   // This editor is intended for markdown only, supporting yaml-frontmatter / toml-frontmatter / json-frontmatter
 
-  if( props.options && props.options.mode && props.options.mode !== 'yaml-frontmatter' && props.options.mode != 'toml-frontmatter' && props.options.mode !== 'json-frontmatter' )
-
-    throw new Error( 'Current only supports yaml-frontmatter mode, tom-frontmatter and json-fromtmatter modes, with gfm as main mode' )
+  if (
+    props.options &&
+    props.options.mode &&
+    props.options.mode !== 'yaml-frontmatter' &&
+    props.options.mode != 'toml-frontmatter' &&
+    props.options.mode !== 'json-frontmatter'
+  )
+    throw new Error(
+      'Current only supports yaml-frontmatter mode, tom-frontmatter and json-fromtmatter modes, with gfm as main mode'
+    )
 
   useEffect(() => {
+    const {
+      options,
+      intlPhrases,
+      locale,
+      atMounted,
+      atUnmounted,
+      atChange
+    } = props
 
-    const { options, intlPhrases, locale, atMounted, atUnmounted, atChange } = props
+    const composedOptions = intlPhrases
+      ? locale === 'zh-CN'
+        ? { ...options, phrases: { ...cnPhrases, ...intlPhrases } }
+        : { ...options, phrases: intlPhrases }
+      : locale === 'zh-CN'
+        ? { ...options, phrases: cnPhrases }
+        : { ...options }
 
-    const composedOptions = intlPhrases ?
-                            ( locale === 'zh-CN' ?
-                              { ...options,
-                                phrases : { ...cnPhrases, ...intlPhrases }
-                              } :
-                              { ...options,
-                                phrases : intlPhrases
-                              } ) :
-                            ( locale === 'zh-CN' ?
-                              { ...options, phrases: cnPhrases } :
-                              { ...options } )
-
-
-//    debugger
+    //    debugger
 
     // Check cm already mounted. If yes, use already mounted cm
-    const cm = mounted ? mounted : CodeMirror(cmEle.current, {
+    console.log( 'mounted ', mounted )
+    const cm: CodeMirror.Editor = mounted || CodeMirror(cmEle.current, {
       ...defaultOptions,
       ...composedOptions
     })
 
-    setMounted( cm )
+    if( !mounted ) {
+      setMounted(cm)
 
-//    console.log( cm )
-    if (options && options.value)
-      cm.setValue(options.value)
-    const width = props.width || null
-    const height = props.height || null
-    cm.setSize( width, height )
+      //    console.log( cm )
+      if (options && options.value) cm.setValue(options.value)
+      const width = props.width || null
+      const height = props.height || null
+      cm.setSize(width, height)
 
-    const composedProps = atChange ? { ...props, onChange: ( editor: CodeMirror.Editor, change: CodeMirror.EditorChange ) => atChange( cm, change, editor.getDoc().getValue() ) } : props
+      const composedProps = atChange
+                          ? {
+                            ...props,
+                            onChange: (
+                              editor: CodeMirror.Editor,
+                              change: CodeMirror.EditorChange
+                            ) => atChange(cm, change, editor.getDoc().getValue())
+                          }
+                          : props
 
-    console.log( 'in use effect' )
-    mapHandlers(composedProps, cm)
-    atMounted && atMounted( cm )
+      console.log('in use effect')
+      mapHandlers(composedProps, cm)
+      atMounted && atMounted(cm)
 
-//    return () => atUnmounted && atUnmounted( cm )
+    }
+    return () => atUnmounted && atUnmounted(cm)
   })
 
   const cmEle: any | null = useRef(null)
 
   return <div ref={cmEle} />
-}
+} )
 
 export default EditorCore
