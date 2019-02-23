@@ -14,7 +14,9 @@ import MarkdownPreview from './MarkdownPreview'
 
 type ProMarkdownMenuNames =
   | 'bold'
+  | 'br'
   | 'code'
+  | 'eraser'
   | 'fullscreen'
   | 'heading'
   | 'help'
@@ -87,6 +89,8 @@ const ProMarkdown = (props: IProMarkdownProps) => {
     [name: string]: () => any
   } = {
     bold: () => codemirror && Helper.toggleBold(codemirror, textState),
+    br: () => codemirror && Helper.drawHorizontalRule(codemirror, textState),
+    eraser: () => codemirror && Helper.cleanBlock(codemirror),
     heading: () => codemirror && Helper.toggleHeading(codemirror),
     italic: () => codemirror && Helper.toggleItalic(codemirror, textState),
     link: () => codemirror && Helper.drawLink(codemirror, textState),
@@ -191,6 +195,10 @@ const ProMarkdown = (props: IProMarkdownProps) => {
       tip: 'Table'
     },
     {
+      name: 'br',
+      tip: 'Horizontal rule'
+    },
+    {
       name: '|',
       tip: ''
     },
@@ -255,7 +263,9 @@ const ProMarkdown = (props: IProMarkdownProps) => {
 
         switch (name) {
           case 'bold':
+          case 'br':
           case 'code':
+          case 'eraser':
           case 'heading':
           case 'image':
           case 'table':

@@ -429,7 +429,37 @@ const toggleCodeBlock = (editor: CodeMirror.Editor) => {
   }
 }
 
+const drawHorizontalRule = (editor: CodeMirror.Editor, stat: ITextState) => {
+  replaceSelection(editor, stat.image, insertTexts.horizontalRule)
+}
+
+const cleanBlock = (editor: CodeMirror.Editor) => {
+  const cm = editor.getDoc()
+  const startPoint = cm.getCursor('start')
+  const endPoint = cm.getCursor('end')
+  let text: string
+
+  for (let line = startPoint.line; line <= endPoint.line; line++) {
+    text = cm.getLine(line)
+    text = text.replace(/^[ ]*([# ]+|\*|\-|[> ]+|[0-9]+(.|\)))[ ]*/, '')
+
+    cm.replaceRange(
+      text,
+      {
+        line: line,
+        ch: 0
+      },
+      {
+        line: line,
+        ch: 99999999999999
+      }
+    )
+  }
+}
+
 export {
+  cleanBlock,
+  drawHorizontalRule,
   drawImage,
   drawLink,
   drawTable,
