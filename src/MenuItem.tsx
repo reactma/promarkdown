@@ -3,8 +3,9 @@ import * as React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import {
-  faColumns,
   faBold,
+  faCode,
+  faColumns,
   faExpandArrowsAlt,
   faEye,
   faHeading,
@@ -35,7 +36,8 @@ const menuNameToIconDefinition: any = {
   fullscreen: faExpandArrowsAlt,
   help: faQuestion,
   splitpane: faColumns,
-  table: faTable
+  table: faTable,
+  code: faCode
 }
 
 export interface IMenuItemProps {
@@ -75,6 +77,5 @@ const MenuItem = (props: IMenuItemProps) => {
     ) : null
   }
 }
-
 
 export default MenuItem

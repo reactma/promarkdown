@@ -13,7 +13,8 @@ import * as Helper from './helpers'
 import MarkdownPreview from './MarkdownPreview'
 
 type ProMarkdownMenuNames =
-  'bold'
+  | 'bold'
+  | 'code'
   | 'fullscreen'
   | 'heading'
   | 'help'
@@ -64,7 +65,7 @@ const ProMarkdown = (props: IProMarkdownProps) => {
     null
   )
 
-  const [textState, setTextState] = React.useState<Helper.ITextState>( {} )
+  const [textState, setTextState] = React.useState<Helper.ITextState>({})
 
   // false - normal editing, true - fullscreen
   const [fullScreen, setFullScreen] = React.useState(false)
@@ -83,18 +84,22 @@ const ProMarkdown = (props: IProMarkdownProps) => {
 
   // Menu iterm interactive handlers
   const iHandlers: {
-    [name: string] : () => any
+    [name: string]: () => any
   } = {
-    bold: () => codemirror && Helper.toggleBold( codemirror, textState ),
-    heading: () => codemirror && Helper.toggleHeading( codemirror ),
-    italic: () => codemirror && Helper.toggleItalic( codemirror, textState ),
-    link: () => codemirror && Helper.drawLink( codemirror, textState ),
-    image: () => codemirror && Helper.drawImage( codemirror, textState ),
-    table: () => codemirror && Helper.drawTable( codemirror, textState ),
-    'ordered-list' : () => codemirror && Helper.toggleOrderedList( codemirror, textState ),
-    'unordered-list' : () => codemirror && Helper.toggleUnorderedList( codemirror, textState ),
-    quote: () => codemirror && Helper.toggleQuote( codemirror, textState),
-    strikethrough: () => codemirror && Helper.toggleStrikethrough( codemirror, textState ),
+    bold: () => codemirror && Helper.toggleBold(codemirror, textState),
+    heading: () => codemirror && Helper.toggleHeading(codemirror),
+    italic: () => codemirror && Helper.toggleItalic(codemirror, textState),
+    link: () => codemirror && Helper.drawLink(codemirror, textState),
+    image: () => codemirror && Helper.drawImage(codemirror, textState),
+    table: () => codemirror && Helper.drawTable(codemirror, textState),
+    code: () => codemirror && Helper.toggleCodeBlock(codemirror),
+    'ordered-list': () =>
+      codemirror && Helper.toggleOrderedList(codemirror, textState),
+    'unordered-list': () =>
+      codemirror && Helper.toggleUnorderedList(codemirror, textState),
+    quote: () => codemirror && Helper.toggleQuote(codemirror, textState),
+    strikethrough: () =>
+      codemirror && Helper.toggleStrikethrough(codemirror, textState),
     preview: () => {
       if (editorState === EditorStates.preview)
         setEditorState(EditorStates.editing)
@@ -155,6 +160,10 @@ const ProMarkdown = (props: IProMarkdownProps) => {
     },
     {
       name: 'quote',
+      tip: 'Toggle quote'
+    },
+    {
+      name: 'code',
       tip: 'Toggle quote'
     },
     {
@@ -231,49 +240,45 @@ const ProMarkdown = (props: IProMarkdownProps) => {
     setValue(value)
   }
 
-  const onCursorActivity = ( cm: CodeMirror.Editor ) => {
+  const onCursorActivity = (cm: CodeMirror.Editor) => {
+    const textState = Helper.getTextState(cm)
 
-    const textState = Helper.getTextState( cm )
-
-    setTextState( textState )
-
+    setTextState(textState)
   }
 
   const menu = (
     <div className='pro-markdown-menu'>
       {menuItem.map((item: IProMarkdownMenuItem, index: number) => {
-
         const { name } = item
 
         let state: IMenuItemState = 'enabled'
 
-        switch ( name ) {
-          case 'bold' :
-          case 'heading' :
+        switch (name) {
+          case 'bold':
+          case 'code':
+          case 'heading':
           case 'image':
           case 'table':
-          case 'italic' :
-          case 'link' :
+          case 'italic':
+          case 'link':
           case 'ordered-list':
-          case 'quote' :
-          case 'table' :
-          case 'strikethrough' :
+          case 'quote':
+          case 'table':
+          case 'strikethrough':
           case 'unordered-list':
             state = textState[name] ? 'selected' : 'enabled'
             break
 
-          case 'italic' :
+          case 'italic':
             state = textState.italic ? 'selected' : 'enabled'
             break
 
-          case 'fullscreen' :
+          case 'fullscreen':
             state = fullScreen ? 'selected' : 'enabled'
             break
 
           default:
-            state = editorState === name
-                  ? 'selected'
-                  : 'enabled'
+            state = editorState === name ? 'selected' : 'enabled'
         }
 
         return (
@@ -281,8 +286,8 @@ const ProMarkdown = (props: IProMarkdownProps) => {
             {name === '|' ? (
               <MenuItem {...item} />
             ) : (
-              <MenuItem {...item} onClick={iHandlers[name]} state={state} />
-            )}
+                <MenuItem {...item} onClick={iHandlers[name]} state={state} />
+              )}
           </span>
         )
       })}
@@ -302,7 +307,7 @@ const ProMarkdown = (props: IProMarkdownProps) => {
 
   const wrapperClassName =
     'pro-markdown ' +
-     (fullScreen ? 'pro-markdown-fullscreen' : 'pro-markdown-normal')
+    (fullScreen ? 'pro-markdown-fullscreen' : 'pro-markdown-normal')
 
   let editor: React.ComponentElement<any, any>
 
