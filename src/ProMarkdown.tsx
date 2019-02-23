@@ -2,19 +2,31 @@ import * as React from 'react'
 
 import EditorCore from './EditorCore'
 
-import MenuItem from './MenuItem'
+import MenuItem, { IMenuItemState } from './MenuItem'
 
 import markdownTransformer from './frontmatterTransformer'
 
 import { debug } from 'util'
 
+import * as Helper from './helpers'
+
 import MarkdownPreview from './MarkdownPreview'
 
 type ProMarkdownMenuNames =
-  | 'preview'
+  'bold'
   | 'fullscreen'
+  | 'heading'
   | 'help'
+  | 'image'
+  | 'ordered-list'
+  | 'quote'
+  | 'italic'
+  | 'link'
+  | 'preview'
+  | 'strikethrough'
   | 'splitpane'
+  | 'table'
+  | 'unordered-list'
   | '|'
 
 interface IProMarkdownMenuItem {
@@ -52,6 +64,8 @@ const ProMarkdown = (props: IProMarkdownProps) => {
     null
   )
 
+  const [textState, setTextState] = React.useState<Helper.ITextState>( {} )
+
   // false - normal editing, true - fullscreen
   const [fullScreen, setFullScreen] = React.useState(false)
 
@@ -64,7 +78,6 @@ const ProMarkdown = (props: IProMarkdownProps) => {
       const cursor = codemirror!.getDoc().getCursor()
       setScroll({ left: pos.left, top: pos.top })
       setCursor({ line: cursor.line, ch: cursor.ch })
-      console.log('saving pos and cursor', pos, cursor)
     }
   }
 
@@ -72,6 +85,16 @@ const ProMarkdown = (props: IProMarkdownProps) => {
   const iHandlers: {
     [name: string] : () => any
   } = {
+    bold: () => codemirror && Helper.toggleBold( codemirror, textState ),
+    heading: () => codemirror && Helper.toggleHeading( codemirror ),
+    italic: () => codemirror && Helper.toggleItalic( codemirror, textState ),
+    link: () => codemirror && Helper.drawLink( codemirror, textState ),
+    image: () => codemirror && Helper.drawImage( codemirror, textState ),
+    table: () => codemirror && Helper.drawTable( codemirror, textState ),
+    'ordered-list' : () => codemirror && Helper.toggleOrderedList( codemirror, textState ),
+    'unordered-list' : () => codemirror && Helper.toggleUnorderedList( codemirror, textState ),
+    quote: () => codemirror && Helper.toggleQuote( codemirror, textState),
+    strikethrough: () => codemirror && Helper.toggleStrikethrough( codemirror, textState ),
     preview: () => {
       if (editorState === EditorStates.preview)
         setEditorState(EditorStates.editing)
@@ -82,7 +105,6 @@ const ProMarkdown = (props: IProMarkdownProps) => {
     },
 
     fullscreen: () => {
-      console.log('before', fullScreen)
       if (editorState === EditorStates.editing) {
         savePosition()
       }
@@ -93,7 +115,6 @@ const ProMarkdown = (props: IProMarkdownProps) => {
       }
 
       setFullScreen(!fullScreen)
-      console.log('set to', !fullScreen)
     },
 
     splitpane: () => {
@@ -112,6 +133,58 @@ const ProMarkdown = (props: IProMarkdownProps) => {
   }
 
   const defaultMenu: IProMarkdownMenuItem[] = [
+    {
+      name: 'bold',
+      tip: 'Toggle bold'
+    },
+    {
+      name: 'italic',
+      tip: 'Toggle italic'
+    },
+    {
+      name: 'strikethrough',
+      tip: 'Toggle strikethrough'
+    },
+    {
+      name: 'heading',
+      tip: 'Toggle heading'
+    },
+    {
+      name: '|',
+      tip: ''
+    },
+    {
+      name: 'quote',
+      tip: 'Toggle quote'
+    },
+    {
+      name: 'unordered-list',
+      tip: 'Toggle unordered list'
+    },
+    {
+      name: 'ordered-list',
+      tip: 'Toggle ordered list'
+    },
+    {
+      name: '|',
+      tip: ''
+    },
+    {
+      name: 'link',
+      tip: 'Link'
+    },
+    {
+      name: 'image',
+      tip: 'Image'
+    },
+    {
+      name: 'table',
+      tip: 'Table'
+    },
+    {
+      name: '|',
+      tip: ''
+    },
     {
       name: 'preview',
       tip: 'Preview'
@@ -141,7 +214,6 @@ const ProMarkdown = (props: IProMarkdownProps) => {
 
   const atMounted = (cm: CodeMirror.Editor) => {
     setCodemirror(cm)
-    //    console.log('cursor at mount', cursor)
     cm.scrollTo(scroll.left, scroll.top)
     cm.getDoc().setCursor(cursor.line, cursor.ch)
     cm.focus()
@@ -159,27 +231,58 @@ const ProMarkdown = (props: IProMarkdownProps) => {
     setValue(value)
   }
 
+  const onCursorActivity = ( cm: CodeMirror.Editor ) => {
+
+    const textState = Helper.getTextState( cm )
+
+    setTextState( textState )
+
+  }
+
   const menu = (
     <div className='pro-markdown-menu'>
       {menuItem.map((item: IProMarkdownMenuItem, index: number) => {
+
         const { name } = item
 
-        const state =
-          name === 'fullscreen'
-            ? fullScreen
-              ? 'selected'
-              : 'enabled'
-            : editorState === name
-              ? 'selected'
-              : 'enabled'
+        let state: IMenuItemState = 'enabled'
+
+        switch ( name ) {
+          case 'bold' :
+          case 'heading' :
+          case 'image':
+          case 'table':
+          case 'italic' :
+          case 'link' :
+          case 'ordered-list':
+          case 'quote' :
+          case 'table' :
+          case 'strikethrough' :
+          case 'unordered-list':
+            state = textState[name] ? 'selected' : 'enabled'
+            break
+
+          case 'italic' :
+            state = textState.italic ? 'selected' : 'enabled'
+            break
+
+          case 'fullscreen' :
+            state = fullScreen ? 'selected' : 'enabled'
+            break
+
+          default:
+            state = editorState === name
+                  ? 'selected'
+                  : 'enabled'
+        }
 
         return (
           <span key={index} className='pro-markdown-icon-wrap'>
             {name === '|' ? (
               <MenuItem {...item} />
             ) : (
-                <MenuItem {...item} onClick={iHandlers[name]} state={state} />
-              )}
+              <MenuItem {...item} onClick={iHandlers[name]} state={state} />
+            )}
           </span>
         )
       })}
@@ -193,16 +296,15 @@ const ProMarkdown = (props: IProMarkdownProps) => {
     },
     atMounted,
     atUnmounted,
-    atChange
+    atChange,
+    onCursorActivity
   }
 
   const wrapperClassName =
     'pro-markdown ' +
-    (fullScreen ? 'pro-markdown-fullscreen' : 'pro-markdown-normal')
+     (fullScreen ? 'pro-markdown-fullscreen' : 'pro-markdown-normal')
 
   let editor: React.ComponentElement<any, any>
-
-  console.log('editorState', editorState)
 
   switch (editorState) {
     case EditorStates.preview: {

@@ -3,22 +3,44 @@ import * as React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import {
-  faEye,
-  faQuestion,
   faColumns,
-  faExpandArrowsAlt
+  faBold,
+  faExpandArrowsAlt,
+  faEye,
+  faHeading,
+  faImage,
+  faItalic,
+  faLink,
+  faListUl,
+  faListOl,
+  faQuestion,
+  faQuoteRight,
+  faStrikethrough,
+  faTable
 } from '@fortawesome/free-solid-svg-icons'
 
+export type IMenuItemState = 'enabled' | 'disabled' | 'selected'
+
 const menuNameToIconDefinition: any = {
+  bold: faBold,
+  quote: faQuoteRight,
+  heading: faHeading,
+  link: faLink,
+  image: faImage,
+  'unordered-list': faListUl,
+  'ordered-list': faListOl,
+  strikethrough: faStrikethrough,
+  italic: faItalic,
   preview: faEye,
   fullscreen: faExpandArrowsAlt,
   help: faQuestion,
-  splitpane: faColumns
+  splitpane: faColumns,
+  table: faTable
 }
 
 export interface IMenuItemProps {
   name: string
-  state?: 'enabled' | 'disabled' | 'selected'
+  state?: IMenuItemState
   tip: string
   onClick?: (name: string, state: string) => void
   keyboard?: string
@@ -53,5 +75,6 @@ const MenuItem = (props: IMenuItemProps) => {
     ) : null
   }
 }
+
 
 export default MenuItem

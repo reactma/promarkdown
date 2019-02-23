@@ -145,7 +145,7 @@ const EditorCore = React.memo((props: IEditorProps) => {
     //    debugger
 
     // Check cm already mounted. If yes, use already mounted cm
-    console.log('mounted ', mounted)
+
     const cm: CodeMirror.Editor =
       mounted ||
       CodeMirror(cmEle.current, {
@@ -169,7 +169,6 @@ const EditorCore = React.memo((props: IEditorProps) => {
         }
         : props
 
-      console.log('in use effect')
       mapHandlers(composedProps, cm)
       atMounted && atMounted(cm)
     }
