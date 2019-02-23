@@ -69,7 +69,9 @@ const ProMarkdown = (props: IProMarkdownProps) => {
   }
 
   // Menu iterm interactive handlers
-  const iHandlers = {
+  const iHandlers: {
+    [name: string] : () => any
+  } = {
     preview: () => {
       if (editorState === EditorStates.preview)
         setEditorState(EditorStates.editing)

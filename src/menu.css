@@ -21,11 +21,11 @@
 }
 
 .menu-icon-enabled {
-    color: #333;
+    color: #747474;
 }
 
 .menu-icon-selected {
-    color: darkblue;
+    color: #209cee;
 }
 
 .menu-icon-enabled:hover, .menu-icon-selected:hover {
