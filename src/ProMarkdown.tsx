@@ -4,8 +4,6 @@ import EditorCore from './EditorCore'
 
 import MenuItem, { IMenuItemState } from './MenuItem'
 
-import markdownTransformer from './frontmatterTransformer'
-
 import { debug } from 'util'
 
 import * as Helper from './helpers'
@@ -43,9 +41,17 @@ interface IProMarkdownMenuItem {
 interface IProMarkdownProps {
   className?: string
   initialValue?: string
-  mode?: 'yaml-frontmatter' | 'toml-frontmatter' | 'json-frontmatter'
+  mode?: {
+    name: 'yaml-frontmatter' | 'toml-frontmatter' | 'json-frontmatter'
+    base: 'markdown' | 'gfm'
+  }
   menu?: IProMarkdownMenuItem[]
   markdownTransformer?: (from: string) => string
+  renderPreview?: (props: { value: string }) => React.ComponentElement<any, any>
+  menuitemTips?: {
+    [name: string]: string
+  }
+  locale?: string
 }
 
 const EditorStates = {
@@ -56,6 +62,20 @@ const EditorStates = {
 
 const ProMarkdown = (props: IProMarkdownProps) => {
   //debugger
+
+  if (
+    props.mode &&
+    props.mode.name !== 'yaml-frontmatter' &&
+    props.mode.name != 'toml-frontmatter' &&
+    props.mode.name !== 'json-frontmatter' &&
+    props.mode.base !== 'markdown' &&
+    props.mode.base !== 'gfm'
+  )
+    throw new Error(
+      'Current only supports yaml-frontmatter mode, tom-frontmatter and json-fromtmatter modes, with gfm or markdown as base mode'
+    )
+
+  const locale = props.locale === 'zh-CN' ? 'zh-CN' : 'en-US'
 
   const [scroll, setScroll] = React.useState({ left: 0, top: 0 })
 
@@ -84,26 +104,42 @@ const ProMarkdown = (props: IProMarkdownProps) => {
     }
   }
 
+  const editing = () => editorState === 'editing' || editorState === 'splitpane'
   // Menu iterm interactive handlers
   const iHandlers: {
     [name: string]: () => any
   } = {
-    bold: () => codemirror && Helper.toggleBold(codemirror, textState),
-    br: () => codemirror && Helper.drawHorizontalRule(codemirror, textState),
-    eraser: () => codemirror && Helper.cleanBlock(codemirror),
-    heading: () => codemirror && Helper.toggleHeading(codemirror),
-    italic: () => codemirror && Helper.toggleItalic(codemirror, textState),
-    link: () => codemirror && Helper.drawLink(codemirror, textState),
-    image: () => codemirror && Helper.drawImage(codemirror, textState),
-    table: () => codemirror && Helper.drawTable(codemirror, textState),
-    code: () => codemirror && Helper.toggleCodeBlock(codemirror),
+    bold: () =>
+      editing() && codemirror && Helper.toggleBold(codemirror, textState),
+    br: () =>
+      editing() &&
+      codemirror &&
+      Helper.drawHorizontalRule(codemirror, textState),
+    eraser: () => editing() && codemirror && Helper.cleanBlock(codemirror),
+    heading: () => editing() && codemirror && Helper.toggleHeading(codemirror),
+    italic: () =>
+      editing() && codemirror && Helper.toggleItalic(codemirror, textState),
+    link: () =>
+      editing() && codemirror && Helper.drawLink(codemirror, textState),
+    image: () =>
+      editing() && codemirror && Helper.drawImage(codemirror, textState),
+    table: () =>
+      editing() && codemirror && Helper.drawTable(codemirror, textState),
+    code: () => editing() && codemirror && Helper.toggleCodeBlock(codemirror),
     'ordered-list': () =>
-      codemirror && Helper.toggleOrderedList(codemirror, textState),
+      editing() &&
+      codemirror &&
+      Helper.toggleOrderedList(codemirror, textState),
     'unordered-list': () =>
-      codemirror && Helper.toggleUnorderedList(codemirror, textState),
-    quote: () => codemirror && Helper.toggleQuote(codemirror, textState),
+      editing() &&
+      codemirror &&
+      Helper.toggleUnorderedList(codemirror, textState),
+    quote: () =>
+      editing() && codemirror && Helper.toggleQuote(codemirror, textState),
     strikethrough: () =>
-      codemirror && Helper.toggleStrikethrough(codemirror, textState),
+      editing() &&
+      codemirror &&
+      Helper.toggleStrikethrough(codemirror, textState),
     preview: () => {
       if (editorState === EditorStates.preview)
         setEditorState(EditorStates.editing)
@@ -141,22 +177,22 @@ const ProMarkdown = (props: IProMarkdownProps) => {
     }
   }
 
-  const defaultMenu: IProMarkdownMenuItem[] = [
+  const defaultMenuCN: IProMarkdownMenuItem[] = [
     {
       name: 'bold',
-      tip: 'Toggle bold'
+      tip: (props.menuitemTips && props.menuitemTips['bold']) || '加黑'
     },
     {
       name: 'italic',
-      tip: 'Toggle italic'
+      tip: (props.menuitemTips && props.menuitemTips['italic']) || '斜体'
     },
     {
       name: 'strikethrough',
-      tip: 'Toggle strikethrough'
+      tip: (props.menuitemTips && props.menuitemTips['strikethrough']) || '删除'
     },
     {
       name: 'heading',
-      tip: 'Toggle heading'
+      tip: (props.menuitemTips && props.menuitemTips['heading']) || '标题'
     },
     {
       name: '|',
@@ -164,19 +200,21 @@ const ProMarkdown = (props: IProMarkdownProps) => {
     },
     {
       name: 'quote',
-      tip: 'Toggle quote'
+      tip: (props.menuitemTips && props.menuitemTips['quote']) || '引用'
     },
     {
       name: 'code',
-      tip: 'Toggle quote'
+      tip: (props.menuitemTips && props.menuitemTips['code']) || '代码'
     },
     {
       name: 'unordered-list',
-      tip: 'Toggle unordered list'
+      tip:
+        (props.menuitemTips && props.menuitemTips['unordered-list']) || '列表'
     },
     {
       name: 'ordered-list',
-      tip: 'Toggle ordered list'
+      tip:
+        (props.menuitemTips && props.menuitemTips['ordered-list']) || '排序列表'
     },
     {
       name: '|',
@@ -184,19 +222,19 @@ const ProMarkdown = (props: IProMarkdownProps) => {
     },
     {
       name: 'link',
-      tip: 'Link'
+      tip: (props.menuitemTips && props.menuitemTips['link']) || '链接'
     },
     {
       name: 'image',
-      tip: 'Image'
+      tip: (props.menuitemTips && props.menuitemTips['image']) || '图片'
     },
     {
       name: 'table',
-      tip: 'Table'
+      tip: (props.menuitemTips && props.menuitemTips['table']) || '表格'
     },
     {
       name: 'br',
-      tip: 'Horizontal rule'
+      tip: (props.menuitemTips && props.menuitemTips['br']) || '水平分割线'
     },
     {
       name: '|',
@@ -204,15 +242,17 @@ const ProMarkdown = (props: IProMarkdownProps) => {
     },
     {
       name: 'preview',
-      tip: 'Preview'
+      tip: (props.menuitemTips && props.menuitemTips['preview']) || '预览'
     },
     {
       name: 'splitpane',
-      tip: 'Edit & live preview'
+      tip:
+        (props.menuitemTips && props.menuitemTips['splitpane']) ||
+        '编辑 & 实时预览'
     },
     {
       name: 'fullscreen',
-      tip: 'Fullscreen'
+      tip: (props.menuitemTips && props.menuitemTips['fullscreen']) || '全屏'
     },
     {
       name: '|',
@@ -220,11 +260,111 @@ const ProMarkdown = (props: IProMarkdownProps) => {
     },
     {
       name: 'help',
-      tip: 'Help'
+      tip: (props.menuitemTips && props.menuitemTips['help']) || '帮助'
     }
   ]
 
-  const mode = props.mode || 'yaml-frontmatter'
+  const defaultMenuEN: IProMarkdownMenuItem[] = [
+    {
+      name: 'bold',
+      tip: (props.menuitemTips && props.menuitemTips['bold']) || 'Toggle bold'
+    },
+    {
+      name: 'italic',
+      tip:
+        (props.menuitemTips && props.menuitemTips['italic']) || 'Toggle italic'
+    },
+    {
+      name: 'strikethrough',
+      tip:
+        (props.menuitemTips && props.menuitemTips['strikethrough']) ||
+        'Toggle strikethrough'
+    },
+    {
+      name: 'heading',
+      tip:
+        (props.menuitemTips && props.menuitemTips['heading']) ||
+        'Toggle heading'
+    },
+    {
+      name: '|',
+      tip: ''
+    },
+    {
+      name: 'quote',
+      tip: (props.menuitemTips && props.menuitemTips['quote']) || 'Toggle quote'
+    },
+    {
+      name: 'code',
+      tip: (props.menuitemTips && props.menuitemTips['code']) || 'Toggle code'
+    },
+    {
+      name: 'unordered-list',
+      tip:
+        (props.menuitemTips && props.menuitemTips['unordered-list']) ||
+        'Toggle unordered list'
+    },
+    {
+      name: 'ordered-list',
+      tip:
+        (props.menuitemTips && props.menuitemTips['ordered-list']) ||
+        'Toggle ordered list'
+    },
+    {
+      name: '|',
+      tip: ''
+    },
+    {
+      name: 'link',
+      tip: (props.menuitemTips && props.menuitemTips['link']) || 'Link'
+    },
+    {
+      name: 'image',
+      tip: (props.menuitemTips && props.menuitemTips['image']) || 'Image'
+    },
+    {
+      name: 'table',
+      tip: (props.menuitemTips && props.menuitemTips['table']) || 'Table'
+    },
+    {
+      name: 'br',
+      tip: (props.menuitemTips && props.menuitemTips['br']) || 'Horizontal rule'
+    },
+    {
+      name: '|',
+      tip: ''
+    },
+    {
+      name: 'preview',
+      tip: (props.menuitemTips && props.menuitemTips['preview']) || 'Preview'
+    },
+    {
+      name: 'splitpane',
+      tip:
+        (props.menuitemTips && props.menuitemTips['splitpane']) ||
+        'Edit & live preview'
+    },
+    {
+      name: 'fullscreen',
+      tip:
+        (props.menuitemTips && props.menuitemTips['fullscreen']) || 'Fullscreen'
+    },
+    {
+      name: '|',
+      tip: ''
+    },
+    {
+      name: 'help',
+      tip: (props.menuitemTips && props.menuitemTips['help']) || 'Help'
+    }
+  ]
+
+  const defaultMenu = locale === 'zh-CN' ? defaultMenuCN : defaultMenuEN
+
+  const mode = props.mode || {
+    name: 'yaml-frontmatter',
+    base: 'gfm'
+  }
 
   const menuItem =
     props.menu && props.menu.length > 0 ? props.menu : defaultMenu
@@ -294,9 +434,14 @@ const ProMarkdown = (props: IProMarkdownProps) => {
         return (
           <span key={index} className='pro-markdown-icon-wrap'>
             {name === '|' ? (
-              <MenuItem {...item} />
+              <MenuItem {...item} editor={codemirror} />
             ) : (
-                <MenuItem {...item} onClick={iHandlers[name]} state={state} />
+                <MenuItem
+                  {...item}
+                  editor={codemirror}
+                  onClick={iHandlers[name]}
+                  state={state}
+                />
               )}
           </span>
         )
@@ -309,6 +454,7 @@ const ProMarkdown = (props: IProMarkdownProps) => {
       value,
       mode
     },
+    locale,
     atMounted,
     atUnmounted,
     atChange,
@@ -323,15 +469,18 @@ const ProMarkdown = (props: IProMarkdownProps) => {
 
   switch (editorState) {
     case EditorStates.preview: {
-      const source = value || ''
+      if (props.renderPreview) editor = props.renderPreview({ value })
+      else {
+        const source = value || ''
 
-      const trans = props.markdownTransformer
-        ? props.markdownTransformer
-        : markdownTransformer
+        const trans = props.markdownTransformer
+          ? props.markdownTransformer
+          : Helper.frontmatterTransformer
 
-      const transed = trans(source)
+        const transed = trans(source)
 
-      editor = <MarkdownPreview source={transed} />
+        editor = <MarkdownPreview source={transed} />
+      }
       return (
         <div className={wrapperClassName}>
           {menu}
@@ -341,20 +490,21 @@ const ProMarkdown = (props: IProMarkdownProps) => {
     }
 
     case EditorStates.splitpane: {
-      const source = value || ''
+      let preview: any
 
-      const trans = props.markdownTransformer
-        ? props.markdownTransformer
-        : markdownTransformer
+      if (props.renderPreview) preview = props.renderPreview({ value })
+      else {
+        const source = value || ''
 
-      const transed = trans(source)
+        const trans = props.markdownTransformer
+          ? props.markdownTransformer
+          : Helper.frontmatterTransformer
 
-      const preview = (
-        <MarkdownPreview className='markdown-body' source={transed} />
-      )
+        const transed = trans(source)
 
+        preview = <MarkdownPreview className='markdown-body' source={transed} />
+      }
       editor = <EditorCore {...editorProps} />
-
       return (
         <div className={wrapperClassName}>
           {menu}
@@ -379,3 +529,5 @@ const ProMarkdown = (props: IProMarkdownProps) => {
 }
 
 export default ProMarkdown
+
+export { IProMarkdownProps }

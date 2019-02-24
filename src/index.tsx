@@ -1,4 +1,4 @@
-import ProMarkdown from './ProMarkdown'
+import ProMarkdown, { IProMarkdownProps } from './ProMarkdown'
 import EditorCore from './EditorCore'
 
-export { ProMarkdown as default, EditorCore }
+export { ProMarkdown as default, EditorCore, IProMarkdownProps }

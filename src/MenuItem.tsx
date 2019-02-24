@@ -1,4 +1,5 @@
 import * as React from 'react'
+import * as CodeMirror from 'codemirror'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
@@ -46,39 +47,64 @@ const menuNameToIconDefinition: any = {
 
 export interface IMenuItemProps {
   name: string
+  editor: CodeMirror.Editor
   state?: IMenuItemState
   tip: string
-  onClick?: (name: string, state: string) => void
+  onClick?: (editor: CodeMirror.Editor, name: string, state: string) => void
   keyboard?: string
+  className?: string
+  render?: (props: {
+    editor: CodeMirror.Editor
+    name: string
+    state: string
+    tip: string
+  }) => React.ComponentElement<any, any>
 }
 
 const MenuItem = (props: IMenuItemProps) => {
-  const { name, state, tip, onClick } = props
+  const { name, editor, state, tip, onClick, render, className } = props
 
-  if (name === '|') {
-    return <i className='separator'> | </i>
-  } else {
-    const faIcon = menuNameToIconDefinition[name]
-
-    const stateClassName =
-      state === 'selected'
-        ? 'menu-icon-selected'
-        : state === 'disabled'
-          ? 'menu-icon-disabled'
-          : 'menu-icon-enabled'
-
-    const className = 'menu-icon ' + stateClassName
-
-    return faIcon ? (
+  if (render) {
+    const composedClassName = 'menu-icon ' + className
+    return (
       <span
-        className={className}
-        onClick={() => onClick && onClick(name, state || 'enabled')}
+        className={composedClassName}
+        onClick={() => onClick && onClick(editor, name, state || 'enabled')}
       >
-        <dfn title={tip}>
-          <FontAwesomeIcon icon={faIcon} />{' '}
-        </dfn>
+        {render({
+          editor,
+          name,
+          state,
+          tip
+        })}
       </span>
-    ) : null
+    )
+  } else {
+    if (name === '|') {
+      return <i className='separator'> | </i>
+    } else {
+      const faIcon = menuNameToIconDefinition[name]
+
+      const stateClassName =
+        state === 'selected'
+          ? 'menu-icon-selected'
+          : state === 'disabled'
+            ? 'menu-icon-disabled'
+            : 'menu-icon-enabled'
+
+      const className = 'menu-icon ' + stateClassName
+
+      return faIcon ? (
+        <span
+          className={className}
+          onClick={() => onClick && onClick(editor, name, state || 'enabled')}
+        >
+          <dfn title={tip}>
+            <FontAwesomeIcon icon={faIcon} />{' '}
+          </dfn>
+        </span>
+      ) : null
+    }
   }
 }
 

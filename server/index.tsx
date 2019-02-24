@@ -11,7 +11,7 @@ import '../src/matchhighlighter.css'
 import '../src/menu.css'
 import '../src/gitmarkdown.css'
 
-import ProMarkdown, { EditorCore } from '../src/index'
+import ProMarkdown, { EditorCore, IProMarkdownProps } from '../src/index'
 
 const value = `
 ---
@@ -112,6 +112,18 @@ const atChange = (
   value: string
 ) => console.log('at change', editor, change, value)
 
+const mode = {
+  name: 'yaml-frontmatter',
+  base: 'markdown'
+}
+
+const menuitemTips = {
+  table: '>>>>>'
+}
+
+const renderPreview = ({ value }: { value: string }) => (
+  <div> custom preivew </div>
+)
 const props = {
   options,
   locale,
@@ -119,15 +131,17 @@ const props = {
   atMounted,
   atUnmounted,
   onChange,
-  atChange
-}
+  atChange,
+  mode,
+  menuitemTips,
+  initialValue: value
+  //  renderPreview
+} as IProMarkdownProps
 
 const proMarkdownProps = {
   initialValue: value
 }
+
 // ReactDOM.render(<EditorCore {...props} />, document.getElementById('root'))
 
-ReactDOM.render(
-  <ProMarkdown {...proMarkdownProps} />,
-  document.getElementById('root')
-)
+ReactDOM.render(<ProMarkdown {...props} />, document.getElementById('root'))

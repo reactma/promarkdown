@@ -1,5 +1,14 @@
 import * as CodeMirror from 'codemirror'
 
+const frontmatterTransformer = (original: string) => {
+  const trimed = original.trim()
+
+  if (trimed.startsWith('---')) {
+    const reg = /---([\s\S]*?)---/
+    return trimed.replace(reg, '')
+  } else return original
+}
+
 // Get text state at given position
 
 interface ITextState {
@@ -463,6 +472,7 @@ export {
   drawImage,
   drawLink,
   drawTable,
+  frontmatterTransformer,
   getTextState,
   toggleBold,
   toggleCodeBlock,

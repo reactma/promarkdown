@@ -113,17 +113,6 @@ const EditorCore = React.memo((props: IEditorProps) => {
 
   // This editor is intended for markdown only, supporting yaml-frontmatter / toml-frontmatter / json-frontmatter
 
-  if (
-    props.options &&
-    props.options.mode &&
-    props.options.mode !== 'yaml-frontmatter' &&
-    props.options.mode != 'toml-frontmatter' &&
-    props.options.mode !== 'json-frontmatter'
-  )
-    throw new Error(
-      'Current only supports yaml-frontmatter mode, tom-frontmatter and json-fromtmatter modes, with gfm as main mode'
-    )
-
   useEffect(() => {
     const {
       options,
