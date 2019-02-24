@@ -63,12 +63,12 @@ const EditorStates = {
 }
 
 const ProMarkdown = (props: IProMarkdownProps) => {
-  //debugger
+  // debugger
 
   if (
     props.mode &&
     props.mode.name !== 'yaml-frontmatter' &&
-    props.mode.name != 'toml-frontmatter' &&
+    props.mode.name !== 'toml-frontmatter' &&
     props.mode.name !== 'json-frontmatter' &&
     props.mode.base !== 'markdown' &&
     props.mode.base !== 'gfm'
@@ -100,16 +100,20 @@ const ProMarkdown = (props: IProMarkdownProps) => {
   const savePosition = () => {
     if (codemirror) {
       const pos = codemirror!.getScrollInfo()
-      const cursor = codemirror!.getDoc().getCursor()
+      const cursorZ = codemirror!.getDoc().getCursor()
       setScroll({ left: pos.left, top: pos.top })
-      setCursor({ line: cursor.line, ch: cursor.ch })
+      setCursor({ line: cursorZ.line, ch: cursorZ.ch })
     }
   }
 
   const editing = () => editorState === 'editing' || editorState === 'splitpane'
   // Menu iterm interactive handlers
   const iHandlers: {
-    [name: string]: (editor: CodeMirror.Editor, name: string, state: string) => any
+    [name: string]: (
+      editor: CodeMirror.Editor,
+      name: string,
+      state: string
+    ) => any
   } = {
     bold: () =>
       editing() && codemirror && Helper.toggleBold(codemirror, textState),
@@ -152,9 +156,7 @@ const ProMarkdown = (props: IProMarkdownProps) => {
     },
 
     fullscreen: () => {
-      if (editorState === EditorStates.editing) {
-        savePosition()
-      }
+      if (editorState === EditorStates.editing) savePosition()
 
       if (editorState === EditorStates.splitpane) {
         savePosition()
@@ -385,15 +387,15 @@ const ProMarkdown = (props: IProMarkdownProps) => {
   const atChange = (
     cm: CodeMirror.Editor,
     change: CodeMirror.EditorChange,
-    value: string
+    valueArg: string
   ) => {
-    setValue(value)
+    setValue(valueArg)
   }
 
   const onCursorActivity = (cm: CodeMirror.Editor) => {
-    const textState = Helper.getTextState(cm)
+    const textStateZ = Helper.getTextState(cm)
 
-    setTextState(textState)
+    setTextState(textStateZ)
   }
 
   const menu = props.hideMenu ? null : (
@@ -410,7 +412,6 @@ const ProMarkdown = (props: IProMarkdownProps) => {
           case 'eraser':
           case 'heading':
           case 'image':
-          case 'table':
           case 'italic':
           case 'link':
           case 'ordered-list':
@@ -419,10 +420,6 @@ const ProMarkdown = (props: IProMarkdownProps) => {
           case 'strikethrough':
           case 'unordered-list':
             state = textState[name] ? 'selected' : 'enabled'
-            break
-
-          case 'italic':
-            state = textState.italic ? 'selected' : 'enabled'
             break
 
           case 'fullscreen':
@@ -455,7 +452,8 @@ const ProMarkdown = (props: IProMarkdownProps) => {
     options: {
       value,
       mode,
-      lineNumbers: typeof props.lineNumbers === undefined ? true : props.lineNumbers
+      lineNumbers:
+        typeof props.lineNumbers === undefined ? true : props.lineNumbers
     },
     locale,
     atMounted,
@@ -464,8 +462,7 @@ const ProMarkdown = (props: IProMarkdownProps) => {
     onCursorActivity
   }
 
-//  debugger
-  console.log('editorprops', editorProps)
+  //  debugger
 
   const wrapperClassName =
     'pro-markdown ' +

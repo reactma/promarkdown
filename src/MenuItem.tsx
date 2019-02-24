@@ -48,7 +48,7 @@ const menuNameToIconDefinition: any = {
 export interface IMenuItemProps {
   name: string
   editor: CodeMirror.Editor
-  state: IMenuItemState
+  state?: IMenuItemState
   tip: string
   onClick?: (editor: CodeMirror.Editor, name: string, state: string) => void
   keyboard?: string
@@ -64,13 +64,13 @@ export interface IMenuItemProps {
 const MenuItem = (props: IMenuItemProps) => {
   const { name, editor, state, tip, onClick, render, className } = props
 
+  const onClickHandler = () =>
+    onClick && onClick(editor, name, state || 'enabled')
+
   if (render) {
     const composedClassName = 'menu-icon ' + className
     return (
-      <span
-        className={composedClassName}
-        onClick={() => onClick && onClick(editor, name, state || 'enabled')}
-      >
+      <span className={composedClassName} onClick={onClickHandler}>
         {render({
           editor,
           name,
@@ -79,32 +79,26 @@ const MenuItem = (props: IMenuItemProps) => {
         })}
       </span>
     )
-  } else {
-    if (name === '|') {
-      return <i className='separator'> | </i>
-    } else {
-      const faIcon = menuNameToIconDefinition[name]
+  } else if (name === '|') return <i className='separator'> | </i>
+  else {
+    const faIcon = menuNameToIconDefinition[name]
 
-      const stateClassName =
-        state === 'selected'
-          ? 'menu-icon-selected'
-          : state === 'disabled'
-            ? 'menu-icon-disabled'
-            : 'menu-icon-enabled'
+    const stateClassName =
+      state === 'selected'
+        ? 'menu-icon-selected'
+        : state === 'disabled'
+          ? 'menu-icon-disabled'
+          : 'menu-icon-enabled'
 
-      const className = 'menu-icon ' + stateClassName
+    const composedClassName = 'menu-icon ' + stateClassName
 
-      return faIcon ? (
-        <span
-          className={className}
-          onClick={() => onClick && onClick(editor, name, state || 'enabled')}
-        >
-          <dfn title={tip}>
-            <FontAwesomeIcon icon={faIcon} />{' '}
-          </dfn>
-        </span>
-      ) : null
-    }
+    return faIcon ? (
+      <span className={composedClassName} onClick={onClickHandler}>
+        <dfn title={tip}>
+          <FontAwesomeIcon icon={faIcon} />{' '}
+        </dfn>
+      </span>
+    ) : null
   }
 }
 

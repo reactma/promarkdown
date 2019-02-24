@@ -26,8 +26,8 @@ import 'codemirror/mode/meta'
 
 import 'codemirror/mode/yaml-frontmatter/yaml-frontmatter'
 
-require('./toml-frontmatter')
-require('./json-frontmatter')
+import './toml-frontmatter'
+import './json-frontmatter'
 
 const { useEffect, useRef } = React
 
@@ -69,7 +69,7 @@ export interface IEditorProps {
   [handlers: string]: any // Handler props that will be mapped to CodeMirror's handlers. Should aways start with on
 }
 
-//Simplified Chinese phrases for search/replace/go-to-line dialogs
+// Simplified Chinese phrases for search/replace/go-to-line dialogs
 
 const cnPhrases = {
   'Search:': '搜索:',
@@ -91,14 +91,14 @@ const cnPhrases = {
  */
 
 const mapHandlers = (props: IEditorProps, cm: CodeMirror.Editor) => {
-  const handlerNames = Object.keys(props).filter(prop => {
+  const handlerNames = Object.keys(props).filter((prop) => {
     return /^on+/.test(prop)
   })
 
   // map EditorCore's event handler defined in props to CodeMirror's event handler
 
-  for (let handlerName of handlerNames) {
-    const cmEvent = handlerName.replace(/^on[A-Z]/g, s =>
+  for (const handlerName of handlerNames) {
+    const cmEvent = handlerName.replace(/^on[A-Z]/g, (s) =>
       s.slice(2).toLowerCase()
     )
     cm.on(cmEvent, props[handlerName])
@@ -119,21 +119,21 @@ const EditorCore = React.memo((props: IEditorProps) => {
       locale,
       atMounted,
       atUnmounted,
-      atChange,
+      atChange
     } = props
 
-
-    const gutters = props.lineNumers ? ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'] : []
+    const gutters = props.lineNumers
+      ? ['CodeMirror-linenumbers', 'CodeMirror-foldgutter']
+      : []
 
     const composedOptions = intlPhrases
-                          ? locale === 'zh-CN'
-                          ? { ...options, phrases: { ...cnPhrases, ...intlPhrases } , gutters}
-                          : { ...options, phrases: intlPhrases , gutters}
-                          : locale === 'zh-CN'
-                          ? { ...options, phrases: cnPhrases, gutters }
-                          : { ...options, gutters }
+      ? locale === 'zh-CN'
+        ? { ...options, phrases: { ...cnPhrases, ...intlPhrases }, gutters }
+        : { ...options, phrases: intlPhrases, gutters }
+      : locale === 'zh-CN'
+        ? { ...options, phrases: cnPhrases, gutters }
+        : { ...options, gutters }
 
-    console.log('composed options', composedOptions)
     // Check cm already mounted. If yes, use already mounted cm
 
     const cm: CodeMirror.Editor =
@@ -160,7 +160,7 @@ const EditorCore = React.memo((props: IEditorProps) => {
         : props
 
       mapHandlers(composedProps, cm)
-      atMounted && atMounted(cm)
+      if (atMounted) atMounted(cm)
     }
     return () => atUnmounted && atUnmounted(cm)
   })

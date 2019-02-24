@@ -52,39 +52,26 @@ const getTextState = (
 
   const types = stat.type.split(' ')
 
-  let ret: ITextState = {}
-  let data: string
+  const ret: ITextState = {}
   let text: string
 
-  for (let i = 0; i < types.length; i++) {
-    data = types[i]
-    if (data === 'strong') {
-      ret.bold = true
-    } else if (data === 'variable-2') {
+  for (const data of types)
+    if (data === 'strong') ret.bold = true
+    else if (data === 'variable-2') {
       text = cm.getLine(pos.line)
-      if (/^\s*\d+\.\s/.test(text)) {
-        ret['ordered-list'] = true
-      } else {
-        ret['unordered-list'] = true
-      }
-    } else if (data === 'atom') {
-      ret.quote = true
-    } else if (data === 'em') {
-      ret.italic = true
-    } else if (data === 'quote') {
-      ret.quote = true
-    } else if (data === 'strikethrough') {
-      ret.strikethrough = true
-    } else if (data === 'comment') {
-      ret.code = true
-    } else if (data === 'link') {
-      ret.link = true
-    } else if (data === 'tag') {
-      ret.image = true
-    } else if (data.match(/^header(\-[1-6])?$/)) {
+
+      if (/^\s*\d+\.\s/.test(text)) ret['ordered-list'] = true
+      else ret['unordered-list'] = true
+    } else if (data === 'atom') ret.quote = true
+    else if (data === 'em') ret.italic = true
+    else if (data === 'quote') ret.quote = true
+    else if (data === 'strikethrough') ret.strikethrough = true
+    else if (data === 'comment') ret.code = true
+    else if (data === 'link') ret.link = true
+    else if (data === 'tag') ret.image = true
+    else if (data.match(/^header(\-[1-6])?$/))
       ret[data.replace('header', 'heading')] = true
-    }
-  }
+
   return ret
 }
 
@@ -111,13 +98,13 @@ const toggleBlock = (
     text = cm.getLine(startPoint.line)
     start = text.slice(0, startPoint.ch)
     end = text.slice(startPoint.ch)
-    if (type == 'bold') {
+    if (type === 'bold') {
       start = start.replace(/(\*\*|__)(?![\s\S]*(\*\*|__))/, '')
       end = end.replace(/(\*\*|__)/, '')
-    } else if (type == 'italic') {
+    } else if (type === 'italic') {
       start = start.replace(/(\*|_)(?![\s\S]*(\*|_))/, '')
       end = end.replace(/(\*|_)/, '')
-    } else if (type == 'strikethrough') {
+    } else if (type === 'strikethrough') {
       start = start.replace(/(\*\*|~~)(?![\s\S]*(\*\*|~~))/, '')
       end = end.replace(/(\*\*|~~)/, '')
     }
@@ -133,28 +120,23 @@ const toggleBlock = (
       }
     )
 
-    if (type == 'bold' || type == 'strikethrough') {
+    if (type === 'bold' || type === 'strikethrough') {
       startPoint.ch -= 2
-      if (startPoint !== endPoint) {
-        endPoint.ch -= 2
-      }
-    } else if (type == 'italic') {
+      if (startPoint !== endPoint) endPoint.ch -= 2
+    } else if (type === 'italic') {
       startPoint.ch -= 1
-      if (startPoint !== endPoint) {
-        endPoint.ch -= 1
-      }
+      if (startPoint !== endPoint) endPoint.ch -= 1
     }
   } else {
     text = cm.getSelection()
-    if (type == 'bold') {
+    if (type === 'bold') {
       text = text.split('**').join('')
       text = text.split('__').join('')
-    } else if (type == 'italic') {
+    } else if (type === 'italic') {
       text = text.split('*').join('')
       text = text.split('_').join('')
-    } else if (type == 'strikethrough') {
-      text = text.split('~~').join('')
-    }
+    } else if (type === 'strikethrough') text = text.split('~~').join('')
+
     cm.replaceSelection(start + text + end)
 
     startPoint.ch += startCharsArg.length
@@ -205,42 +187,42 @@ const toggleHeadingBase = (
   const cm = editor.getDoc()
   const startPoint = cm.getCursor('start')
   const endPoint = cm.getCursor('end')
-  for (let i = startPoint.line; i <= endPoint.line; i++) {
-    ; (function(i) {
+  for (let p = startPoint.line; p <= endPoint.line; p++) {
+    ; ((i) => {
       let text = cm.getLine(i)
       const currHeadingLevel = text.search(/[^#]/)
 
       if (direction !== undefined) {
         if (currHeadingLevel <= 0) {
-          if (direction == 'bigger') {
+          if (direction === 'bigger') {
             text = '###### ' + text
           } else {
             text = '# ' + text
           }
-        } else if (currHeadingLevel == 6 && direction == 'smaller') {
+        } else if (currHeadingLevel === 6 && direction === 'smaller') {
           text = text.substr(7)
-        } else if (currHeadingLevel == 1 && direction == 'bigger') {
+        } else if (currHeadingLevel === 1 && direction === 'bigger') {
           text = text.substr(2)
         } else {
-          if (direction == 'bigger') {
+          if (direction === 'bigger') {
             text = text.substr(1)
           } else {
             text = '#' + text
           }
         }
       } else {
-        if (size == 1) {
+        if (size === 1) {
           if (currHeadingLevel <= 0) {
             text = '# ' + text
-          } else if (currHeadingLevel == size) {
+          } else if (currHeadingLevel === size) {
             text = text.substr(currHeadingLevel + 1)
           } else {
             text = '# ' + text.substr(currHeadingLevel + 1)
           }
-        } else if (size == 2) {
+        } else if (size === 2) {
           if (currHeadingLevel <= 0) {
             text = '## ' + text
-          } else if (currHeadingLevel == size) {
+          } else if (currHeadingLevel === size) {
             text = text.substr(currHeadingLevel + 1)
           } else {
             text = '## ' + text.substr(currHeadingLevel + 1)
@@ -248,7 +230,7 @@ const toggleHeadingBase = (
         } else {
           if (currHeadingLevel <= 0) {
             text = '### ' + text
-          } else if (currHeadingLevel == size) {
+          } else if (currHeadingLevel === size) {
             text = text.substr(currHeadingLevel + 1)
           } else {
             text = '### ' + text.substr(currHeadingLevel + 1)
@@ -267,7 +249,7 @@ const toggleHeadingBase = (
           ch: 99999999999999
         }
       )
-    })(i)
+    })(p)
   }
   editor.focus()
 }
@@ -294,8 +276,8 @@ const toggleLine = (
     'unordered-list': '* ',
     'ordered-list': '1. '
   }
-  for (let i = startPoint.line; i <= endPoint.line; i++) {
-    ; (function(i) {
+  for (let p = startPoint.line; p <= endPoint.line; p++) {
+    ; ((i) => {
       let text = cm.getLine(i)
       if (stat[name]) {
         text = text.replace((repl as any)[name], '$1')
@@ -313,7 +295,7 @@ const toggleLine = (
           ch: 99999999999999
         }
       )
-    })(i)
+    })(p)
   }
   editor.focus()
 }
@@ -385,54 +367,53 @@ const drawTable = (editor: CodeMirror.Editor, stat: ITextState) => {
  * Action for toggling code block.
  */
 const toggleCodeBlock = (editor: CodeMirror.Editor) => {
-  const fenceCharsToInsert = DefaultBlockStyles.code
+  const fenceCharsToInsertZ = DefaultBlockStyles.code
 
   const insertFencingAtSelection = (
-    editor: CodeMirror.Editor,
-    cur_start: any,
-    cur_end: any,
+    curStartArg: any,
+    curEndArg: any,
     fenceCharsToInsert: any
   ) => {
-    const cm = editor.getDoc()
+    const cmZ = editor.getDoc()
 
-    let start_line_sel = cur_start.line + 1,
-      end_line_sel = cur_end.line + 1,
-      sel_multi = cur_start.line !== cur_end.line,
-      repl_start = fenceCharsToInsert + '\n',
-      repl_end = '\n' + fenceCharsToInsert
-    if (sel_multi) {
-      end_line_sel++
+    const startLineSel = curStartArg.line + 1
+    let endLineSel = curEndArg.line + 1
+    const selMultiZ = curStartArg.line !== curEndArg.line
+    const replStart = fenceCharsToInsert + '\n'
+    let replEnd = '\n' + fenceCharsToInsert
+    if (selMultiZ) {
+      endLineSel++
     }
     // handle last char including \n or not
-    if (sel_multi && cur_end.ch === 0) {
-      repl_end = fenceCharsToInsert + '\n'
-      end_line_sel--
+    if (selMultiZ && curEndArg.ch === 0) {
+      replEnd = fenceCharsToInsert + '\n'
+      endLineSel--
     }
-    replaceSelection(editor, false, [repl_start, repl_end])
-    cm.setSelection(
+    replaceSelection(editor, false, [replStart, replEnd])
+    cmZ.setSelection(
       {
-        line: start_line_sel,
+        line: startLineSel,
         ch: 0
       },
       {
-        line: end_line_sel,
+        line: endLineSel,
         ch: 0
       }
     )
   }
 
-  const cm = editor.getDoc(),
-    cur_start = cm.getCursor('start'),
-    cur_end = cm.getCursor('end')
+  const cm = editor.getDoc()
+  const curStart = cm.getCursor('start')
+  const curEnd = cm.getCursor('end')
 
   // insert code formatting
-  const no_sel_and_starting_of_line =
-    cur_start.line === cur_end.line &&
-    cur_start.ch === cur_end.ch &&
-    cur_start.ch === 0
-  const sel_multi = cur_start.line !== cur_end.line
-  if (no_sel_and_starting_of_line || sel_multi) {
-    insertFencingAtSelection(editor, cur_start, cur_end, fenceCharsToInsert)
+  const noSelAndStartingOfLine =
+    curStart.line === curEnd.line &&
+    curStart.ch === curEnd.ch &&
+    curStart.ch === 0
+  const selMulti = curStart.line !== curEnd.line
+  if (noSelAndStartingOfLine || selMulti) {
+    insertFencingAtSelection(curStart, curEnd, fenceCharsToInsertZ)
   } else {
     replaceSelection(editor, false, ['`', '`'])
   }
@@ -455,11 +436,11 @@ const cleanBlock = (editor: CodeMirror.Editor) => {
     cm.replaceRange(
       text,
       {
-        line: line,
+        line,
         ch: 0
       },
       {
-        line: line,
+        line,
         ch: 99999999999999
       }
     )
