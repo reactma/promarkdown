@@ -47,7 +47,6 @@ const defaultOptions: CodeMirror.EditorConfiguration &
   lineWrapping: true,
   lineNumbers: true,
   foldGutter: true,
-  gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
   scrollbarStyle: 'simple',
   highlightSelectionMatches: { showToken: /\w/, annotateScrollbar: true },
   extraKeys: { 'Alt-F': 'findPersistent', 'Ctrl-M': 'replaceShift' }
@@ -120,19 +119,21 @@ const EditorCore = React.memo((props: IEditorProps) => {
       locale,
       atMounted,
       atUnmounted,
-      atChange
+      atChange,
     } = props
 
+
+    const gutters = props.lineNumers ? ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'] : []
+
     const composedOptions = intlPhrases
-      ? locale === 'zh-CN'
-        ? { ...options, phrases: { ...cnPhrases, ...intlPhrases } }
-        : { ...options, phrases: intlPhrases }
-      : locale === 'zh-CN'
-        ? { ...options, phrases: cnPhrases }
-        : { ...options }
+                          ? locale === 'zh-CN'
+                          ? { ...options, phrases: { ...cnPhrases, ...intlPhrases } , gutters}
+                          : { ...options, phrases: intlPhrases , gutters}
+                          : locale === 'zh-CN'
+                          ? { ...options, phrases: cnPhrases, gutters }
+                          : { ...options, gutters }
 
-    //    debugger
-
+    console.log('composed options', composedOptions)
     // Check cm already mounted. If yes, use already mounted cm
 
     const cm: CodeMirror.Editor =

@@ -35,12 +35,13 @@ interface IProMarkdownMenuItem {
   tip: string
   className?: string
   render?: (props?: any) => any
-  onClick?: (name: string, state: string) => void
+  onClick?: (editor: CodeMirror.Editor, name: string, state: string) => void
 }
 
 interface IProMarkdownProps {
   className?: string
   initialValue?: string
+  hideMenu?: boolean
   mode?: {
     name: 'yaml-frontmatter' | 'toml-frontmatter' | 'json-frontmatter'
     base: 'markdown' | 'gfm'
@@ -52,6 +53,7 @@ interface IProMarkdownProps {
     [name: string]: string
   }
   locale?: string
+  lineNumbers?: boolean
 }
 
 const EditorStates = {
@@ -107,7 +109,7 @@ const ProMarkdown = (props: IProMarkdownProps) => {
   const editing = () => editorState === 'editing' || editorState === 'splitpane'
   // Menu iterm interactive handlers
   const iHandlers: {
-    [name: string]: () => any
+    [name: string]: (editor: CodeMirror.Editor, name: string, state: string) => any
   } = {
     bold: () =>
       editing() && codemirror && Helper.toggleBold(codemirror, textState),
@@ -394,10 +396,10 @@ const ProMarkdown = (props: IProMarkdownProps) => {
     setTextState(textState)
   }
 
-  const menu = (
+  const menu = props.hideMenu ? null : (
     <div className='pro-markdown-menu'>
       {menuItem.map((item: IProMarkdownMenuItem, index: number) => {
-        const { name } = item
+        const { name, onClick } = item
 
         let state: IMenuItemState = 'enabled'
 
@@ -434,12 +436,12 @@ const ProMarkdown = (props: IProMarkdownProps) => {
         return (
           <span key={index} className='pro-markdown-icon-wrap'>
             {name === '|' ? (
-              <MenuItem {...item} editor={codemirror} />
+              <MenuItem {...item} editor={codemirror!} state={state} />
             ) : (
                 <MenuItem
                   {...item}
-                  editor={codemirror}
-                  onClick={iHandlers[name]}
+                  editor={codemirror!}
+                  onClick={onClick || iHandlers[name]}
                   state={state}
                 />
               )}
@@ -452,7 +454,8 @@ const ProMarkdown = (props: IProMarkdownProps) => {
   const editorProps = {
     options: {
       value,
-      mode
+      mode,
+      lineNumbers: typeof props.lineNumbers === undefined ? true : props.lineNumbers
     },
     locale,
     atMounted,
@@ -460,6 +463,9 @@ const ProMarkdown = (props: IProMarkdownProps) => {
     atChange,
     onCursorActivity
   }
+
+//  debugger
+  console.log('editorprops', editorProps)
 
   const wrapperClassName =
     'pro-markdown ' +
