@@ -121,26 +121,26 @@ const menuitemTips = {
   table: '>>>>>'
 }
 
-
 const menu = [
   {
     name: 'bold',
-    tip: 'Make it bold',
+    tip: 'Make it bold'
   },
   {
     name: 'italic',
     tip: 'italic',
     render: () => <div> Italic </div>,
-    onClick: (editor: CodeMirror.Editor, name: string, state: string) => console.log('italic clicked', editor, name, state)
+    onClick: (editor: CodeMirror.Editor, name: string, state: string) =>
+      console.log('italic clicked', editor, name, state)
   },
   {
     name: 'mycommand',
     tip: 'myCommand',
     className: 'icon-my-comman',
     render: () => <div> My comman </div>,
-    onClick: (editor: CodeMirror.Editor, name: string, state: string) => console.log('mycomman', editor, name, state)
+    onClick: (editor: CodeMirror.Editor, name: string, state: string) =>
+      console.log('mycomman', editor, name, state)
   }
-
 ]
 
 const renderPreview = ({ value }: { value: string }) => (
@@ -149,7 +149,7 @@ const renderPreview = ({ value }: { value: string }) => (
 const props = {
   noMenu: true,
   options,
-  menu,
+  //  menu,
   locale,
   intlPhrases,
   atMounted,
@@ -159,7 +159,7 @@ const props = {
   mode,
   menuitemTips,
   initialValue: value,
-  lineNumbers: false,
+  lineNumbers: false
   //  renderPreview
 } as IProMarkdownProps
 
