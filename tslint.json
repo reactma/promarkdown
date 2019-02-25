@@ -18,5 +18,8 @@
     "no-string-literal": false,
     "prefer-conditional-expression": false
   },
-  "rulesDirectory": []
+  "rulesDirectory": [],
+  "linterOptions" : {
+    "exclude": ["./**/*.test.ts", "./**/*.test.tsx"]
+  }
 }

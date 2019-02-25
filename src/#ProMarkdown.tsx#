@@ -56,10 +56,10 @@ interface IProMarkdownProps {
   locale?: string
   lineNumbers?: boolean
   helpLink?: string
-  atMounted?: (editor: CodeMirror.Editor) => any
-  atUnmounted?: (editor: CodeMirror.Editor, value: string) => any
-  atChange?: (editor: CodeMirror.Editor, change: CodeMirror.EditorChange, value: string) => any
-  codemirrorOptions?: any
+  atMounted?: ( editor: CodeMirror.Editor ) => any
+  atUnmounted?: ( editor: CodeMirror.Editor, value: string ) => any
+  atChange?: ( editor: CodeMirror.Editor, change: CodeMirror.EditorChange, value : string ) => any
+  options?: any
 }
 
 const EditorStates = {
@@ -386,15 +386,15 @@ const ProMarkdown = (props: IProMarkdownProps) => {
     cm.scrollTo(scroll.left, scroll.top)
     cm.getDoc().setCursor(cursor.line, cursor.ch)
     cm.focus()
-    if (props.atMounted)
-      props.atMounted(cm)
+    if( props.atMounted )
+      props.atMounted( cm )
   }
 
   const atUnmounted = (cm: CodeMirror.Editor) => {
-    const valueZ = cm.getDoc().getValue()
-    setValue(valueZ)
-    if (props.atUnmounted)
-      props.atUnmounted(cm, valueZ)
+    const value = cm.getDoc().getValue()
+    setValue(value)
+    if( props.atUnmounted )
+      props.atUnmounted( cm, value )
   }
 
   const atChange = (
@@ -403,8 +403,8 @@ const ProMarkdown = (props: IProMarkdownProps) => {
     valueArg: string
   ) => {
     setValue(valueArg)
-    if (props.atChange)
-      props.atChange(cm, change, valueArg)
+    if( props.atChange )
+      props.atChange(cm, change, valueArg )
   }
 
   const onCursorActivity = (cm: CodeMirror.Editor) => {
@@ -465,7 +465,7 @@ const ProMarkdown = (props: IProMarkdownProps) => {
     </div>
   )
 
-  const options = props.codemirrorOptions ? { ...props.codemirrorOptions, ...{
+  const options = props.options ? { ...props.options, ...{
     value,
     mode,
     lineNumbers:
@@ -476,6 +476,8 @@ const ProMarkdown = (props: IProMarkdownProps) => {
     lineNumbers:
         typeof props.lineNumbers === undefined ? true : props.lineNumbers
   }
+
+  console.log( 'editor otpions', options)
 
   const editorProps = {
     options,

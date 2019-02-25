@@ -53,6 +53,7 @@ export interface IMenuItemProps {
   onClick?: (editor: CodeMirror.Editor, name: string, state: string) => void
   keyboard?: string
   className?: string
+  link?: string
   render?: (props: {
     editor: CodeMirror.Editor
     name: string
@@ -62,7 +63,7 @@ export interface IMenuItemProps {
 }
 
 const MenuItem = (props: IMenuItemProps) => {
-  const { name, editor, state = 'enabled', tip, onClick, render, className } = props
+  const { name, editor, state = 'enabled', tip, onClick, render, className , link } = props
 
   const onClickHandler = () =>
     onClick && onClick(editor, name, state || 'enabled')
@@ -92,13 +93,25 @@ const MenuItem = (props: IMenuItemProps) => {
 
     const composedClassName = 'menu-icon ' + stateClassName
 
-    return faIcon ? (
-      <span className={composedClassName} onClick={onClickHandler}>
-        <dfn title={tip}>
-          <FontAwesomeIcon icon={faIcon} />{' '}
-        </dfn>
-      </span>
-    ) : null
+    if (name === 'help')
+      return faIcon ? (
+        <a href={link} target='_blank'>
+          <span className={composedClassName} >
+            <dfn title={tip}>
+              <FontAwesomeIcon icon={faIcon} />{' '}
+            </dfn>
+          </span>
+        </a>
+      ) : null
+
+    else
+      return faIcon ? (
+        <span className={composedClassName} onClick={onClickHandler}>
+          <dfn title={tip}>
+            <FontAwesomeIcon icon={faIcon} />{' '}
+          </dfn>
+        </span>
+      ) : null
   }
 }
 

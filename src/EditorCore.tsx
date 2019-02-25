@@ -151,13 +151,13 @@ const EditorCore = React.memo((props: IEditorProps) => {
 
       const composedProps = atChange
         ? {
-          ...props,
+          ...composedOptions,
           onChange: (
             editor: CodeMirror.Editor,
             change: CodeMirror.EditorChange
           ) => atChange(cm, change, editor.getDoc().getValue())
         }
-        : props
+        : composedOptions
 
       mapHandlers(composedProps, cm)
       if (atMounted) atMounted(cm)
@@ -167,7 +167,7 @@ const EditorCore = React.memo((props: IEditorProps) => {
 
   const cmEle: any | null = useRef(null)
 
-  const composedClassName = 'pro-markdown-codemirror' + (props.className ? ' ' + props.className : '' )
+  const composedClassName = 'pro-markdown-codemirror' + (props.className ? ' ' + props.className : '')
 
   return <div className={composedClassName} ref={cmEle} />
 })

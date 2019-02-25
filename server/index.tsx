@@ -94,7 +94,11 @@ See http://github.github.com/github-flavored-markdown/.
 `
 let cm: CodeMirror.Editor
 
-const options = { value, mode: 'toml-frontmatter' }
+const options = {
+  onBeforeChange: () => console.log('on before change'),
+  onKeyHandled: () => console.log('key handled')
+}
+
 const locale = 'zh-CN'
 const intlPhrases = {
   'Search:': '搜索:>>>>'
@@ -110,7 +114,7 @@ const atChange = (
   editor: CodeMirror.Editor,
   change: CodeMirror.EditorChange,
   value: string
-) => console.log('at change', editor, change, value)
+) => console.log('at change >>>>>>>>', editor, change, value)
 
 const mode = {
   name: 'yaml-frontmatter',
@@ -147,9 +151,9 @@ const renderPreview = ({ value }: { value: string }) => (
   <div> custom preivew </div>
 )
 const props = {
-  noMenu: true,
+  hideMenu: false,
   options,
-  menu,
+//  menu,
   locale,
   intlPhrases,
   atMounted,
@@ -159,7 +163,8 @@ const props = {
   mode,
   menuitemTips,
   initialValue: value,
-  lineNumbers: false
+  lineNumbers: false,
+  helpLink: 'https://bing.com'
   //  renderPreview
 } as IProMarkdownProps
 
