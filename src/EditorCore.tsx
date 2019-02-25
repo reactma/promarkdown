@@ -167,7 +167,9 @@ const EditorCore = React.memo((props: IEditorProps) => {
 
   const cmEle: any | null = useRef(null)
 
-  return <div ref={cmEle} />
+  const composedClassName = 'pro-markdown-codemirror' + (props.className ? ' ' + props.className : '' )
+
+  return <div className={composedClassName} ref={cmEle} />
 })
 
 export default EditorCore
