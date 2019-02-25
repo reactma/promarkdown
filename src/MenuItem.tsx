@@ -23,6 +23,7 @@ import {
   faTable
 } from '@fortawesome/free-solid-svg-icons'
 
+
 export type IMenuItemState = 'enabled' | 'disabled' | 'selected'
 
 const menuNameToIconDefinition: any = {
