@@ -43,7 +43,7 @@
   },
   "scripts": {
     "clean": "rimraf dist lib doc",
-    "cpcss": "cpx './src/*.css' ./lib/",
+    "cpcss": "cpx './src/*.{css,js}' ./lib/",
     "dev": "webpack-dev-server",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p .",
