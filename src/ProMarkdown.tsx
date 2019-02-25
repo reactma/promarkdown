@@ -271,6 +271,10 @@ const ProMarkdown = (props: IProMarkdownProps) => {
       tip: ''
     },
     {
+      name: 'keyboard',
+      tip: (props.menuitemTips && props.menuitemTips['keyboard']) || '键盘',
+    },
+    {
       name: 'help',
       tip: (props.menuitemTips && props.menuitemTips['help']) || '帮助',
       link: 'https://guides.github.com/features/mastering-markdown/'
@@ -365,6 +369,10 @@ const ProMarkdown = (props: IProMarkdownProps) => {
     {
       name: '|',
       tip: ''
+    },
+    {
+      name: 'keyboard',
+      tip: (props.menuitemTips && props.menuitemTips['keyboard']) || 'keyboard',
     },
     {
       name: 'help',

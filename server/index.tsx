@@ -10,6 +10,7 @@ import 'codemirror/addon/search/matchesonscrollbar.css'
 import '../src/matchhighlighter.css'
 import '../src/promarkdown.css'
 import '../src/gitmarkdown.css'
+import '../src/keymapmenu.css'
 
 import ProMarkdown, { EditorCore, IProMarkdownProps } from '../src/index'
 
