@@ -1,5 +1,4 @@
 .menu-icon-keyboard {
-    z-index: 99;
     display: inline-block;
 }
 .menu-icon-keyboard a {
@@ -22,16 +21,16 @@
     position: relative;
     text-decoration: none;
     transition-duration: 0.5s;
-    z-index: 99;
 }
 
 .menu-icon-keyboard li a {
-    padding: 1em;
-    color: black !important;
+    padding: 1.2em;
 }
 
-.menu-icon-keyboard .dropdown ul {
-    padding: 1em;
+.first-keyboard {
+}
+
+.last-keyboard {
 }
 
 .menu-icon-keyboard li:focus-within {
@@ -42,6 +41,10 @@
     outline: none;
 }
 
+.current-keyboard a {
+    font-weight: bold !important;
+}
+
 .menu-icon-keyboard ul li ul {
     background: lightgray;
     visibility: hidden;
@@ -49,7 +52,6 @@
     min-width: 5rem;
     position: absolute;
     transition: all 0.5s ease;
-    margin-top: 1rem;
     left: 0;
     display: none;
 }
@@ -70,4 +72,13 @@
 
 .keyboard-icon {
     margin-right: 0.5em;
+}
+
+.dropdown {
+    z-index: 99;
+}
+
+.dropdown a {
+    z-index: 99;
+    vertical-align: 0.125em;
 }

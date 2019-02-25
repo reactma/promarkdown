@@ -25,34 +25,46 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 
 
+const keyboards = ['Default', 'Vim', 'Emacs', 'Sublime']
+
 const keymap = ( props : { onClick: ( name: string ) => any,
-                           keymap: string,
+                           keyboard: string,
                            locale: string } ) => {
 
-                             const { onClick, keymap, locale } = props
-                             const defaultKeymap = locale === 'zh-CN' ? '默认' : 'Default'
-                             const setDefault = () => onClick(defaultKeymap)
+                             const { onClick, keyboard, locale } = props
 
-  const setVim = () => onClick('vim')
-  const setEmacs = () => onClick('emacs')
-  const setSublime = () => onClick('sublime')
-
-
-                             return     <>
+                             return <>
                                <ul>
                                  <li>
-                               <a href="#" aria-haspopup="true"><FontAwesomeIcon className="keyboard-icon" icon={faKeyboard} />{keymap}</a>
-    <ul className="dropdown" aria-label="submenu">
-      <li><a onClick={setDefault}>{defaultKeymap}</a></li>
-      <li><a onClick={setVim}>vim</a></li>
-      <li><a onClick={setEmacs}>emacs</a></li>
-      <li><a onClick={setSublime}>sublime</a></li>
-    </ul>
+                                   <span aria-haspopup="true"><FontAwesomeIcon className="keyboard-icon" icon={faKeyboard} /></span>
+                                   <ul className="dropdown" aria-label="submenu">
+                                     {
+                                       keyboards.map( (keyboardArg: string, i: number) => {
+
+                                         let className: string
+
+                                         if( i === 0 )
+                                           className = 'first-keyboard'
+                                         else if (i === keyboards.length - 1)
+                                           className = 'last-keyboard'
+                                         else
+                                           className = ''
+
+                                         if( keyboard === keyboardArg )
+                                           className += ' current-keyboard'
+
+                                         const keyboardName = keyboardArg === 'Default' && locale === 'zh-CN' ? '默认' : keyboardArg
+
+                                         const setKeyboard = () => onClick( keyboardArg )
+
+                                         return <li key={i}  className={className}><a  onClick={setKeyboard}>{keyboardName}</a></li>
+                                       })
+                                     }
+                                   </ul>
                                  </li>
                                </ul>
-  </>
-
-}
+                             </>
+                           }
 
 export type IMenuItemState = 'enabled' | 'disabled' | 'selected'
 
@@ -93,7 +105,7 @@ export interface IMenuItemProps {
   }) => React.ComponentElement<any, any>
 }
 
-const MenuItem = (props: IMenuItemProps & { keyboard: string, locale: string } ) => {
+const MenuItem = (props: IMenuItemProps & { keyboard?: string, locale?: string } ) => {
 
   const { name, editor, state = 'enabled', tip, onClick, render, className , link, keyboard, locale } = props
 
@@ -116,9 +128,9 @@ const MenuItem = (props: IMenuItemProps & { keyboard: string, locale: string } )
     return <i className='separator'> | </i>
   else if (name === 'keyboard') {
 
-    const composedClassName = 'menu-icon-keyboard'
+    const composedClassName = 'menu-icon-keyboard menu-icon-enabled'
 
-    const setKeymap = (name: string) => onClick( editor, keyboard, state )
+    const setKeymap = (name: string) => onClick( editor, name, state )
 
     return <div className={composedClassName} >
       <dfn title={tip}>

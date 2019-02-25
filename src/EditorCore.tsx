@@ -23,6 +23,9 @@ import 'codemirror/addon/edit/continuelist'
 import 'codemirror/addon/fold/foldcode'
 import 'codemirror/addon/fold/foldgutter'
 import 'codemirror/mode/meta'
+import 'codemirror/keymap/vim'
+import 'codemirror/keymap/emacs'
+import 'codemirror/keymap/sublime'
 
 import 'codemirror/mode/yaml-frontmatter/yaml-frontmatter'
 
@@ -146,7 +149,8 @@ const EditorCore = React.memo((props: IEditorProps) => {
     if (!mounted) {
       setMounted(cm)
 
-      //    console.log( cm )
+
+      console.log( 'cm mounting', cm )
       if (options && options.value) cm.setValue(options.value)
 
       const composedProps = atChange

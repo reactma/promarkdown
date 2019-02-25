@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import EditorCore from './EditorCore'
 
-import MenuItem, { IMenuItemState } from './MenuItem'
+import MenuItem, { IMenuItemState, IMenuItemProps } from './MenuItem'
 
 import { debug } from 'util'
 
@@ -93,6 +93,8 @@ const ProMarkdown = (props: IProMarkdownProps) => {
 
   const [value, setValue] = React.useState<string>(props.initialValue || '')
 
+  const [keyboard, setKeyboard] = React.useState<string>('Default') //Vim, Emacs, Sublime
+
   const [codemirror, setCodemirror] = React.useState<CodeMirror.Editor | null>(
     null
   )
@@ -131,6 +133,12 @@ const ProMarkdown = (props: IProMarkdownProps) => {
       Helper.drawHorizontalRule(codemirror, textState),
     eraser: () => editing() && codemirror && Helper.cleanBlock(codemirror),
     heading: () => editing() && codemirror && Helper.toggleHeading(codemirror),
+    keyboard: (editor: CodeMirror.Editor, name: string, state: string ) => {
+      console.log('set keyboard', name)
+      if( codemirror )
+        codemirror.setOption('keyMap', name.toLowerCase())
+      setKeyboard( name )
+    },
     italic: () =>
       editing() && codemirror && Helper.toggleItalic(codemirror, textState),
     link: () =>
@@ -142,18 +150,18 @@ const ProMarkdown = (props: IProMarkdownProps) => {
     code: () => editing() && codemirror && Helper.toggleCodeBlock(codemirror),
     'ordered-list': () =>
       editing() &&
-      codemirror &&
-      Helper.toggleOrderedList(codemirror, textState),
+                        codemirror &&
+                        Helper.toggleOrderedList(codemirror, textState),
     'unordered-list': () =>
       editing() &&
-      codemirror &&
-      Helper.toggleUnorderedList(codemirror, textState),
+                          codemirror &&
+                          Helper.toggleUnorderedList(codemirror, textState),
     quote: () =>
       editing() && codemirror && Helper.toggleQuote(codemirror, textState),
     strikethrough: () =>
       editing() &&
-      codemirror &&
-      Helper.toggleStrikethrough(codemirror, textState),
+                       codemirror &&
+                       Helper.toggleStrikethrough(codemirror, textState),
     preview: () => {
       if (editorState === EditorStates.preview)
         setEditorState(EditorStates.editing)
@@ -456,8 +464,13 @@ const ProMarkdown = (props: IProMarkdownProps) => {
 
         }
 
-        const composedItem = props.helpLink ? {...item, link: props.helpLink, editor: codemirror!, state }
-                           : {...item, editor: codemirror!, state }
+        let composedItem: IMenuItemProps & { keyboard?: string, locale?: string } =
+          props.helpLink ?
+          {...item, link: props.helpLink, editor: codemirror!, state } :
+          {...item, editor: codemirror!, state }
+
+        if( name === 'keyboard' )
+          composedItem = {...composedItem, keyboard, locale: props.locale }
 
         return (
           <span key={index} className='pro-markdown-icon-wrap'>
@@ -475,14 +488,20 @@ const ProMarkdown = (props: IProMarkdownProps) => {
     </div>
   )
 
+  const keyMap = keyboard.toLocaleLowerCase()
+
+  console.log( keyMap )
+
   const options = props.codemirrorOptions ? { ...props.codemirrorOptions, ...{
     value,
     mode,
+    keyMap,
     lineNumbers:
         typeof props.lineNumbers === undefined ? true : props.lineNumbers
   } } : {
     value,
     mode,
+    keyMap,
     lineNumbers:
         typeof props.lineNumbers === undefined ? true : props.lineNumbers
   }
