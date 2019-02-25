@@ -48,7 +48,7 @@ const menuNameToIconDefinition: any = {
 export interface IMenuItemProps {
   name: string
   editor: CodeMirror.Editor
-  state?: IMenuItemState
+  state: IMenuItemState
   tip: string
   onClick?: (editor: CodeMirror.Editor, name: string, state: string) => void
   keyboard?: string
