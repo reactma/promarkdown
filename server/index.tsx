@@ -94,7 +94,7 @@ See http://github.github.com/github-flavored-markdown/.
 `
 let cm: CodeMirror.Editor
 
-const options = {
+const codemirrorOptions = {
   onBeforeChange: () => console.log('on before change'),
   onKeyHandled: () => console.log('key handled')
 }
@@ -152,7 +152,7 @@ const renderPreview = ({ value }: { value: string }) => (
 )
 const props = {
   hideMenu: false,
-  options,
+  codemirrorOptions,
 //  menu,
   locale,
   intlPhrases,

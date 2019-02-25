@@ -78,10 +78,10 @@ const cnPhrases = {
   'Replace:': '替换:',
   'Replace all:': '全部替换:',
   'With:': '为:',
-  'Yes:': '是',
-  'No:': '否',
-  'All:': '所有',
-  'Stop:': '停止',
+  'Yes': '是',
+  'No': '否',
+  'All': '所有',
+  'Stop': '停止',
   'Jump to line:': '跳转到行:',
   '(Use line:column or scroll% syntax)': '(使用 行号:列号 或 滚动比例% 语法)'
 }
