@@ -28,7 +28,10 @@ export type ProMarkdownMenuNames =
   | 'splitpane'
   | 'table'
   | 'unordered-list'
+  | 'keymap'
   | '|'
+
+type Keymap = 'default' | 'vim' | 'sublime' | 'emacs'
 
 export interface IProMarkdownMenuItem {
   name: ProMarkdownMenuNames | string
