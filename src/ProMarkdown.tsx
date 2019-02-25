@@ -31,7 +31,7 @@ type ProMarkdownMenuNames =
   | '|'
 
 interface IProMarkdownMenuItem {
-  name: ProMarkdownMenuNames
+  name: ProMarkdownMenuNames | string
   tip: string
   className?: string
   render?: (props?: any) => any

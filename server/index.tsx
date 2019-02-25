@@ -8,7 +8,7 @@ import 'codemirror/addon/search/matchesonscrollbar.css'
 import 'codemirror/addon/search/matchesonscrollbar.css'
 
 import '../src/matchhighlighter.css'
-import '../src/menu.css'
+import '../src/promarkdown.css'
 import '../src/gitmarkdown.css'
 
 import ProMarkdown, { EditorCore, IProMarkdownProps } from '../src/index'
@@ -137,7 +137,7 @@ const menu = [
     name: 'mycommand',
     tip: 'myCommand',
     className: 'icon-my-comman',
-    render: () => <div> My comman </div>,
+    render: () => <div className="custom-rendered"> My comman </div>,
     onClick: (editor: CodeMirror.Editor, name: string, state: string) =>
       console.log('mycomman', editor, name, state)
   }
@@ -149,7 +149,7 @@ const renderPreview = ({ value }: { value: string }) => (
 const props = {
   noMenu: true,
   options,
-  //  menu,
+  menu,
   locale,
   intlPhrases,
   atMounted,
