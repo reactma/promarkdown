@@ -3,6 +3,11 @@
   "version": "0.0.1",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
+  "homepage": "https://github.com/reactma/remarkdown.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/reactma/remarkdown.git"
+  },
   "description": "A react markdown editor for programmers and professional tech document writters, based CodeMirror, supporting YAML / TOML /JSON front matters, search, replace, linenumber, and key maps, including Vims, Emacs, and Sublime.",
   "author": "Reactma",
   "license": "MIT",
@@ -64,6 +69,10 @@
     "Editor",
     "Prefessional",
     "Frontmatter",
+    "YAML",
+    "TOML",
+    "JSON",
+    "Extensible",
     "React",
     "Reactma"
   ],
