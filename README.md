@@ -4,7 +4,7 @@
 
 ProMarkdown is a professional grade React markdown editor based on CodeMirror, for programmers and professional tech writters.
 
-[Github home](https://github.com/reactma/remarkdown)
+[Github home](https://github.com/reactma/promarkdown)
 
 It provides following features for more sophiscated markdown editing:
 
@@ -48,11 +48,11 @@ ProMarkdown is built with Typescript. But you don't need TS to use it as a libra
 
 Clone the repo:
 
-`git clone https://github.com/reactma/remarkdown`
+`git clone https://github.com/reactma/promarkdown`
 
 Enter the repo:
 
-`cd remarkdown`
+`cd promarkdown`
 
 Install dependencies
 
@@ -72,13 +72,13 @@ Build library:
 ### Install
 
 ```
-yarn add remarkdown
+yarn add promarkdown
 ```
 
 or
 
 ```
-npm install remarkdown
+npm install promarkdown
 ```
 
 
@@ -98,15 +98,15 @@ import 'codemirror/addon/scroll/simplescrollbars.css'
 import 'codemirror/addon/dialog/dialog.css'
 import 'codemirror/addon/search/matchesonscrollbar.css'
 
-import 'remarkdown/matchhighlighter.css'
-import 'remarkdown/remarkdown.css'
-import 'remarkdown/gitmarkdown.css'
-import 'remarkdown/keymapmenu.css'
+import 'promarkdown/matchhighlighter.css'
+import 'promarkdown/promarkdown.css'
+import 'promarkdown/gitmarkdown.css'
+import 'promarkdown/keymapmenu.css'
 
 /*** End of Important ******************/
 
 
-import ProMarkdown, { IProMarkdownProps } from 'remarkdown'
+import ProMarkdown, { IProMarkdownProps } from 'promarkdown'
 
 const initialValue = `
 ---
@@ -200,7 +200,7 @@ interface IProMarkdownProps {
   locale?: string //Serach/replace/goto line/ menu tip locale, only support zh-CN now
   lineNumbers?: boolean // show linenumber or not
   helpLink?: string //Link to help page for Help menu item
-  atMounted?: (editor: CodeMirror.Editor) => any // Your handler after Remarkdown is mounted. You can get your codemirror instance for lowlevel CodeMirror manipulation
+  atMounted?: (editor: CodeMirror.Editor) => any // Your handler after Promarkdown is mounted. You can get your codemirror instance for lowlevel CodeMirror manipulation
   atUnmounted?: (editor: CodeMirror.Editor, value: string) => any // Your handler after Remardown is unmounted
   atChange?: (editor: CodeMirror.Editor, change: CodeMirror.EditorChange, value: string) => any // Your handler for editor change. 
   codemirrorOptions?: any // Options that will be passed directly to codemirror
@@ -210,7 +210,7 @@ interface IProMarkdownProps {
 
 #### Menu
 
-Remarkdown provides following built-in menus:
+Promarkdown provides following built-in menus:
 
 ```
 export type ProMarkdownMenuNames =
