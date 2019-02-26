@@ -128,8 +128,6 @@ const renderPreview =  (props: { value: string, frontmatter: string }) => {
 
 const testProps1 = {
   initialValue,
-  lineNumbers: true,
-  renderPreview,
 }
 
 const testProps2 = {
