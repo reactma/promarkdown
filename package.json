@@ -1,6 +1,6 @@
 {
-  "name": "remarkdown",
-  "version": "0.0.1",
+  "name": "promarkdown",
+  "version": "0.5.0",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "homepage": "https://github.com/reactma/remarkdown.git",

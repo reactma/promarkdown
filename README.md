@@ -2,7 +2,7 @@
 
 ## Introduction
 
-ReMarkdown is a professional grade React markdown editor based on CodeMirror, for programmers and professional tech writters.
+ProMarkdown is a professional grade React markdown editor based on CodeMirror, for programmers and professional tech writters.
 
 [Github home](https://github.com/reactma/remarkdown)
 
