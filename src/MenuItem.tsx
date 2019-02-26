@@ -28,16 +28,27 @@ import {
 const keyboards = ['Default', 'Vim', 'Emacs', 'Sublime']
 
 const keymap = ( props : { onClick: ( name: string ) => any,
-                           keyboard: string,
-                           locale: string } ) => {
+                           keyboard?: string,
+                           tip: string,
+                           locale?: string } ) => {
 
-                             const { onClick, keyboard, locale } = props
+                             const [showDropdown, setShowDropdown] = React.useState( false )
+
+                             const { onClick, keyboard, locale, tip } = props
+
+                             const dropdownStyle = {
+                               position: 'absolute',
+                               zIndex: 99,
+                               display: showDropdown ? 'block' : 'none'
+                             } as React.CSSProperties
 
                              return <>
-                               <ul>
-                                 <li>
-                                   <span aria-haspopup="true"><FontAwesomeIcon className="keyboard-icon" icon={faKeyboard} /></span>
-                                   <ul className="dropdown" aria-label="submenu">
+                               <span aria-haspopup="true"
+                                     onMouseOver={() => setShowDropdown( true )}
+                                     onMouseOut={() => setShowDropdown( false )}
+                               ><dfn title={tip}> <FontAwesomeIcon className="keyboard-icon" icon={faKeyboard} /> </dfn>
+                                 <div className="keyboard-dropdown-wrapper" style={dropdownStyle}>
+                                   <ul className="keyboard-dropdown" aria-label="submenu">
                                      {
                                        keyboards.map( (keyboardArg: string, i: number) => {
 
@@ -61,10 +72,11 @@ const keymap = ( props : { onClick: ( name: string ) => any,
                                        })
                                      }
                                    </ul>
-                                 </li>
-                               </ul>
+                                 </div>
+                               </span>
                              </>
                            }
+
 
 export type IMenuItemState = 'enabled' | 'disabled' | 'selected'
 
@@ -130,12 +142,10 @@ const MenuItem = (props: IMenuItemProps & { keyboard?: string, locale?: string }
 
     const composedClassName = 'menu-icon-keyboard menu-icon-enabled'
 
-    const setKeymap = (name: string) => onClick( editor, name, state )
+    const setKeymap = (name: string) => onClick && onClick( editor, name, state )
 
     return <div className={composedClassName} >
-      <dfn title={tip}>
-        { keymap( { onClick: setKeymap, keyboard, locale } ) }
-      </dfn>
+        { keymap( { onClick: setKeymap, keyboard, locale, tip } ) }
     </div>
 
   } else {
