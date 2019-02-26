@@ -2,12 +2,12 @@
 
 ## Introduction
 
-ReMarkdown is a React professional grade markdown editor based on CodeMirror, for programmers and professional techdoc writters.
+ReMarkdown is a professional grade React markdown editor based on CodeMirror, for programmers and professional tech writters.
 
 It provides following features for more sophiscated markdown editing:
 
-- Frontmatters, YAML / TOML /JSON, which is the main reason for ReMarkdown
-- Keymap, Vim / Ssublime / Emacs, and obviously default
+- Frontmatters, YAML / TOML /JSON, which is the main reason for devloping ReMarkdown
+- Keymap, Vim / Sublime / Emacs, and obviously default
 - Line numbers
 - Block folding
 - Preview / Fullscreen / Editing and live preview
@@ -28,7 +28,7 @@ ReMarkdown is built with Typescript. But you don't need TS to use it as a librar
 
 ### Bare editor - no menu and linenumbers
 
-![Bear](./demo/demo-default.png)
+![Bear](./demo/demo-bare.png)
 
 ### Live edit and preview
 
@@ -81,22 +81,29 @@ npm install remarkdown
 
 ### Basic usage
 
+**Important: You must import style sheets or provide your own customization**
+
 ```
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
+
+/*** Important : You must import style sheets or provide your own customization ***/
+
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/addon/fold/foldgutter.css'
 import 'codemirror/addon/scroll/simplescrollbars.css'
 import 'codemirror/addon/dialog/dialog.css'
 import 'codemirror/addon/search/matchesonscrollbar.css'
-import 'codemirror/addon/search/matchesonscrollbar.css'
 
-import '../src/matchhighlighter.css'
-import '../src/remarkdown.css'
-import '../src/gitmarkdown.css'
-import '../src/keymapmenu.css'
+import 'remarkdown/matchhighlighter.css'
+import 'remarkdown/remarkdown.css'
+import 'remarkdown/gitmarkdown.css'
+import 'remarkdown/keymapmenu.css'
 
-import ReMarkdown, { EditorCore, IReMarkdownProps } from '../src/index'
+/******** Important ******************/
+
+
+import ReMarkdown, { IReMarkdownProps } from 'remarkdown'
 
 const initialValue = `
 ---

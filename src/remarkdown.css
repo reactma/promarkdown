@@ -52,6 +52,7 @@
 
 .remarkdown-splitpane-preview {
     width: 100%;
+    border-left: 1px solid #ddd;
 }
 
 .remarkdown-fullscreen {

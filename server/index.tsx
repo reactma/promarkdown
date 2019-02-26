@@ -5,7 +5,6 @@ import 'codemirror/addon/fold/foldgutter.css'
 import 'codemirror/addon/scroll/simplescrollbars.css'
 import 'codemirror/addon/dialog/dialog.css'
 import 'codemirror/addon/search/matchesonscrollbar.css'
-import 'codemirror/addon/search/matchesonscrollbar.css'
 
 import '../src/matchhighlighter.css'
 import '../src/remarkdown.css'
