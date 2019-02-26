@@ -4,6 +4,8 @@
 
 ReMarkdown is a professional grade React markdown editor based on CodeMirror, for programmers and professional tech writters.
 
+[Github home](https://github.com/reactma/remarkdown)
+
 It provides following features for more sophiscated markdown editing:
 
 - Frontmatters, YAML / TOML /JSON, which is the main reason for devloping ReMarkdown
@@ -64,6 +66,9 @@ Build library:
 
 `yarn build`
 
+
+## Usage
+
 ### Install
 
 ```
@@ -76,8 +81,6 @@ or
 npm install remarkdown
 ```
 
-
-## Usage
 
 ### Basic usage
 
@@ -100,7 +103,7 @@ import 'remarkdown/remarkdown.css'
 import 'remarkdown/gitmarkdown.css'
 import 'remarkdown/keymapmenu.css'
 
-/******** Important ******************/
+/*** End of Important ******************/
 
 
 import ReMarkdown, { IReMarkdownProps } from 'remarkdown'
@@ -292,4 +295,4 @@ You need to provide your own render prop to ReMarkdown:
 renderPreview?: (props: { value: string, frontmatter: string }) => React.ComponentElement<any, any> // Your custom preview component
 ```
 
-The value is the editor's entire value, including frontmatter. You need to parse the value on your own. The preset frontmatter is passed in, with values of `yaml-frontmatter` or `toml-frontmatter` or `json-frontmatter`
+The value is the editor's entire content, including frontmatter. You need to parse the value on your own. The preset frontmatter is passed in, with values of `yaml-frontmatter` or `toml-frontmatter` or `json-frontmatter`
