@@ -1,0 +1,87 @@
+.promarkdown-menu {
+    padding-left: 40px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    display: flex;
+    justify-items: center;
+}
+.promarkdown-icon-wrap {
+    padding: 2px;
+    margin-right: 8px;
+}
+
+.separator {
+    display: inline-block;
+    width: 0;
+    border-left: 1px solid #d9d9d9;
+    border-right: 1px solid #fff;
+    color: transparent;
+    text-indent: -10px;
+    margin: 0 12px;
+}
+
+.menu-icon-enabled {
+    color: #747474;
+}
+
+.menu-icon-selected {
+    color: #209cee;
+}
+
+.menu-icon-enabled:hover, .menu-icon-selected:hover {
+    cursor: pointer;
+}
+
+.promarkdown {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.promarkdown-menu {
+    border-bottom: 1px solid #ddd;
+    background-color: #f7f7f7;
+}
+
+.promarkdown-splitwrap {
+    display: flex;
+}
+
+.promarkdown-splitpane-editor {
+    width: 100%;
+}
+
+.promarkdown-splitpane-preview {
+    width: 100%;
+    border-left: 1px solid #ddd;
+}
+
+.promarkdown-fullscreen {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 99;
+    width: 100%;
+}
+
+.promarkdown-normal {
+    padding-bottom: 0.2em;
+}
+
+.promarkdown-normal .CodeMirror {
+    min-height: 50vh;
+    max-height: 80vh;
+}
+
+.promarkdown-fullscreen .CodeMirror {
+    padding-bottom: 0.2em;
+}
+
+.promarkdown-fullscreen .CodeMirror {
+    height: 95vh;
+}
+
+.promarkdown-preview {
+    overflow-y: scroll;
+    padding: 1em;
+    height: 95vh;
+}

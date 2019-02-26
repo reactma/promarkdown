@@ -7,11 +7,11 @@ import 'codemirror/addon/dialog/dialog.css'
 import 'codemirror/addon/search/matchesonscrollbar.css'
 
 import '../src/matchhighlighter.css'
-import '../src/remarkdown.css'
+import '../src/promarkdown.css'
 import '../src/gitmarkdown.css'
 import '../src/keymapmenu.css'
 
-import ReMarkdown, { EditorCore, IReMarkdownProps } from '../src/index'
+import ProMarkdown, { EditorCore, IProMarkdownProps } from '../src/index'
 
 const initialValue = `
 ---
@@ -145,10 +145,10 @@ const testProps2 = {
   lineNumbers: false,
   helpLink: 'https://bing.com',
   renderPreview,
-} as IReMarkdownProps
+} as IProMarkdownProps
 
 // ReactDOM.render(<EditorCore {...testProps2} />, document.getElementById('root'))
 
-ReactDOM.render(<ReMarkdown {...testProps1} />, document.getElementById('root'))
-//ReactDOM.render(<ReMarkdown menuitemTips={menuitemTips} atChange={atChange} initialValue={initialValue} />, document.getElementById('root'))
+ReactDOM.render(<ProMarkdown {...testProps1} />, document.getElementById('root'))
+//ReactDOM.render(<ProMarkdown menuitemTips={menuitemTips} atChange={atChange} initialValue={initialValue} />, document.getElementById('root'))
 

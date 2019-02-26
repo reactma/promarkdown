@@ -37,7 +37,7 @@ const MarkdownPreview = ({
   const parsed = htmlToReactParser.parse(html)
 
   const composedClassName =
-    (className ? className + ' ' : '') + 'remarkdown-preview'
+    (className ? className + ' ' : '') + 'promarkdown-preview'
 
   return <div className={composedClassName}> {parsed} </div>
 }

@@ -9,24 +9,16 @@ Enzyme.configure({ adapter: new Adapter() })
 
 describe("Editor core", () => {
 
-  const wrapper = render( <EditorCore className="my-remarkdown" /> )
+  const wrapper = render( <EditorCore className="my-promarkdown" /> )
 
   test("Editor core is mounted correctly", () => {
 
-    expect(wrapper.find('.remarkdown-codemirror')).toBeDefined()
-    expect(wrapper.find('.my-remarkdown')).toBeDefined()
-
+    expect(wrapper.is('.promarkdown-codemirror')).toBeTruthy()
   })
 
   test("Custom class name is effective", () => {
 
-    expect(wrapper.find('.my-remarkdown')).toBeDefined()
-
-  })
-
-  test("CodeMirror is mounted correctly", () => {
-
-    expect(wrapper.find('.CodeMirror')).toBeDefined()
+    expect(wrapper.is('.my-promarkdown')).toBeTruthy()
 
   })
 
