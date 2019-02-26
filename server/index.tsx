@@ -8,11 +8,11 @@ import 'codemirror/addon/search/matchesonscrollbar.css'
 import 'codemirror/addon/search/matchesonscrollbar.css'
 
 import '../src/matchhighlighter.css'
-import '../src/promarkdown.css'
+import '../src/remarkdown.css'
 import '../src/gitmarkdown.css'
 import '../src/keymapmenu.css'
 
-import ProMarkdown, { EditorCore, IProMarkdownProps } from '../src/index'
+import ReMarkdown, { EditorCore, IReMarkdownProps } from '../src/index'
 
 const value = `
 ---
@@ -148,9 +148,6 @@ const menu = [
   }
 ]
 
-const renderPreview = ({ value }: { value: string }) => (
-  <div> custom preivew </div>
-)
 const props = {
   hideMenu: false,
   codemirrorOptions,
@@ -167,12 +164,8 @@ const props = {
   lineNumbers: false,
   helpLink: 'https://bing.com'
   //  renderPreview
-} as IProMarkdownProps
-
-const proMarkdownProps = {
-  initialValue: value
-}
+} as IReMarkdownProps
 
 // ReactDOM.render(<EditorCore {...props} />, document.getElementById('root'))
 
-ReactDOM.render(<ProMarkdown {...props} />, document.getElementById('root'))
+ReactDOM.render(<ReMarkdown {...props} />, document.getElementById('root'))

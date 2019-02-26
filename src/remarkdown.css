@@ -1,0 +1,86 @@
+.remarkdown-menu {
+    padding-left: 40px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    display: flex;
+    justify-items: center;
+}
+.remarkdown-icon-wrap {
+    padding: 2px;
+    margin-right: 8px;
+}
+
+.separator {
+    display: inline-block;
+    width: 0;
+    border-left: 1px solid #d9d9d9;
+    border-right: 1px solid #fff;
+    color: transparent;
+    text-indent: -10px;
+    margin: 0 12px;
+}
+
+.menu-icon-enabled {
+    color: #747474;
+}
+
+.menu-icon-selected {
+    color: #209cee;
+}
+
+.menu-icon-enabled:hover, .menu-icon-selected:hover {
+    cursor: pointer;
+}
+
+.remarkdown {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.remarkdown-menu {
+    border-bottom: 1px solid #ddd;
+    background-color: #f7f7f7;
+}
+
+.remarkdown-splitwrap {
+    display: flex;
+}
+
+.remarkdown-splitpane-editor {
+    width: 100%;
+}
+
+.remarkdown-splitpane-preview {
+    width: 100%;
+}
+
+.remarkdown-fullscreen {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 99;
+    width: 100%;
+}
+
+.remarkdown-normal {
+    padding-bottom: 0.2em;
+}
+
+.remarkdown-normal .CodeMirror {
+    min-height: 50vh;
+    max-height: 80vh;
+}
+
+.remarkdown-fullscreen .CodeMirror {
+    padding-bottom: 0.2em;
+}
+
+.remarkdown-fullscreen .CodeMirror {
+    height: 95vh;
+}
+
+.remarkdown-preview {
+    overflow-y: scroll;
+    padding: 1em;
+    height: 95vh;
+}

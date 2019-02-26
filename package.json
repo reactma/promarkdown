@@ -1,9 +1,9 @@
 {
-  "name": "promarkdown",
-  "version": "0.0.7",
+  "name": "remarkdown",
+  "version": "0.0.1",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "description": "A professional grade react markdown editor, based CodeMirror, supporting search, replace, linenumber, key map, and most importantly YAML frontmatter.",
+  "description": "A react markdown editor for programmers and professional tech document writters, based CodeMirror, supporting YAML / TOML /JSON front matters, search, replace, linenumber, and key maps, including Vims, Emacs, and Sublime.",
   "author": "Reactma",
   "license": "MIT",
   "devDependencies": {
