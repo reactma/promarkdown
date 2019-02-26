@@ -81,10 +81,10 @@ const cnPhrases = {
   'Replace:': '替换:',
   'Replace all:': '全部替换:',
   'With:': '为:',
-  'Yes': '是',
-  'No': '否',
-  'All': '所有',
-  'Stop': '停止',
+  Yes: '是',
+  No: '否',
+  All: '所有',
+  Stop: '停止',
   'Jump to line:': '跳转到行:',
   '(Use line:column or scroll% syntax)': '(使用 行号:列号 或 滚动比例% 语法)'
 }
@@ -125,43 +125,40 @@ const EditorCore = React.memo((props: IEditorProps) => {
       atChange
     } = props
 
-    const gutters = props.lineNumers
+    const gutters = options!.lineNumbers
       ? ['CodeMirror-linenumbers', 'CodeMirror-foldgutter']
       : []
 
-    const composedOptions = intlPhrases
-      ? locale === 'zh-CN'
-        ? { ...options, phrases: { ...cnPhrases, ...intlPhrases }, gutters }
-        : { ...options, phrases: intlPhrases, gutters }
-      : locale === 'zh-CN'
-        ? { ...options, phrases: cnPhrases, gutters }
-        : { ...options, gutters }
+    const composedOptions = intlPhrases ?
+                            (locale === 'zh-CN' ?
+                              {...defaultOptions, ...options, phrases: { ...cnPhrases, ...intlPhrases }, gutters } :
+                              {...defaultOptions, ...options, phrases: intlPhrases, gutters }
+                            )
+                          : (locale === 'zh-CN' ?
+                              {...defaultOptions, ...options, phrases: cnPhrases, gutters } :
+                              {...defaultOptions, ...options, gutters }
+                          )
 
     // Check cm already mounted. If yes, use already mounted cm
 
     const cm: CodeMirror.Editor =
       mounted ||
-      CodeMirror(cmEle.current, {
-        ...defaultOptions,
-        ...composedOptions
-      })
+      CodeMirror(cmEle.current, composedOptions)
 
     if (!mounted) {
       setMounted(cm)
 
-
-      console.log( 'cm mounting', cm )
       if (options && options.value) cm.setValue(options.value)
 
       const composedProps = atChange
-        ? {
-          ...composedOptions,
-          onChange: (
-            editor: CodeMirror.Editor,
-            change: CodeMirror.EditorChange
-          ) => atChange(cm, change, editor.getDoc().getValue())
-        }
-        : composedOptions
+                          ? {
+                            ...composedOptions,
+                            onChange: (
+                              editor: CodeMirror.Editor,
+                              change: CodeMirror.EditorChange
+                            ) => atChange(cm, change, editor.getDoc().getValue())
+                          }
+                          : composedOptions
 
       mapHandlers(composedProps, cm)
       if (atMounted) atMounted(cm)

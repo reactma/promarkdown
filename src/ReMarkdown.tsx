@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import EditorCore from './EditorCore'
 
-import MenuItem, { IMenuItemState, IMenuItemProps } from './MenuItem'
+import MenuItem, { IMenuItemState, IMenuItemProps, IMenuItemRenderProps } from './MenuItem'
 
 import { debug } from 'util'
 
@@ -32,16 +32,20 @@ export type ReMarkdownMenuNames =
 
 type Keymap = 'default' | 'vim' | 'sublime' | 'emacs'
 
+export interface IMenuItemTips {
+  [name: string]: string,
+}
+
 export interface IReMarkdownMenuItem {
   name: ReMarkdownMenuNames | string
   tip: string
   className?: string
-  render?: (props?: any) => any
+  render?: (props?: IMenuItemRenderProps) => any
   onClick?: (editor: CodeMirror.Editor, name: string, state: string) => void
   link?: string // For help only
 }
 
-interface IReMarkdownProps {
+export interface IReMarkdownProps {
   className?: string
   initialValue?: string
   hideMenu?: boolean
@@ -51,7 +55,7 @@ interface IReMarkdownProps {
   }
   menu?: IReMarkdownMenuItem[]
   markdownTransformer?: (from: string) => string
-  renderPreview?: (props: { value: string }) => React.ComponentElement<any, any>
+  renderPreview?: (props: { value: string, frontmatter: string }) => React.ComponentElement<any, any>
   menuitemTips?: {
     [name: string]: string
   }
@@ -62,6 +66,7 @@ interface IReMarkdownProps {
   atUnmounted?: (editor: CodeMirror.Editor, value: string) => any
   atChange?: (editor: CodeMirror.Editor, change: CodeMirror.EditorChange, value: string) => any
   codemirrorOptions?: any
+  menuItemTips?: IMenuItemTips
 }
 
 const EditorStates = {
@@ -93,7 +98,7 @@ const ReMarkdown = (props: IReMarkdownProps) => {
 
   const [value, setValue] = React.useState<string>(props.initialValue || '')
 
-  const [keyboard, setKeyboard] = React.useState<string>('Default') //Vim, Emacs, Sublime
+  const [keyboard, setKeyboard] = React.useState<string>('Default') // Vim, Emacs, Sublime
 
   const [codemirror, setCodemirror] = React.useState<CodeMirror.Editor | null>(
     null
@@ -133,11 +138,10 @@ const ReMarkdown = (props: IReMarkdownProps) => {
       Helper.drawHorizontalRule(codemirror, textState),
     eraser: () => editing() && codemirror && Helper.cleanBlock(codemirror),
     heading: () => editing() && codemirror && Helper.toggleHeading(codemirror),
-    keyboard: (editor: CodeMirror.Editor, name: string, state: string ) => {
-      console.log('set keyboard', name)
-      if( codemirror )
+    keyboard: (editorArg: CodeMirror.Editor, name: string, state: string) => {
+      if (codemirror)
         codemirror.setOption('keyMap', name.toLowerCase())
-      setKeyboard( name )
+      setKeyboard(name)
     },
     italic: () =>
       editing() && codemirror && Helper.toggleItalic(codemirror, textState),
@@ -464,12 +468,12 @@ const ReMarkdown = (props: IReMarkdownProps) => {
 
         }
 
-        let composedItem: IMenuItemProps & { keyboard?: string, locale?: string } =
+        let composedItem: IMenuItemProps = (
           props.helpLink ?
           {...item, link: props.helpLink, editor: codemirror!, state } :
-          {...item, editor: codemirror!, state }
+          {...item, editor: codemirror!, state})
 
-        if( name === 'keyboard' )
+        if (name === 'keyboard')
           composedItem = {...composedItem, keyboard, locale: props.locale }
 
         return (
@@ -490,20 +494,18 @@ const ReMarkdown = (props: IReMarkdownProps) => {
 
   const keyMap = keyboard.toLocaleLowerCase()
 
-  console.log( keyMap )
-
   const options = props.codemirrorOptions ? { ...props.codemirrorOptions, ...{
     value,
     mode,
     keyMap,
     lineNumbers:
-        typeof props.lineNumbers === undefined ? true : props.lineNumbers
+        (typeof props.lineNumbers) === 'undefined' ? true : props.lineNumbers
   } } : {
     value,
     mode,
     keyMap,
     lineNumbers:
-        typeof props.lineNumbers === undefined ? true : props.lineNumbers
+        (typeof props.lineNumbers) === 'undefined' ? true : props.lineNumbers
   }
 
   const editorProps = {
@@ -525,7 +527,7 @@ const ReMarkdown = (props: IReMarkdownProps) => {
 
   switch (editorState) {
     case EditorStates.preview: {
-      if (props.renderPreview) editor = props.renderPreview({ value })
+      if (props.renderPreview) editor = props.renderPreview({ value, frontmatter: mode.name })
       else {
         const source = value || ''
 
@@ -548,7 +550,7 @@ const ReMarkdown = (props: IReMarkdownProps) => {
     case EditorStates.splitpane: {
       let preview: any
 
-      if (props.renderPreview) preview = props.renderPreview({ value })
+      if (props.renderPreview) preview = props.renderPreview({ value,  frontmatter: mode.name })
       else {
         const source = value || ''
 
@@ -585,5 +587,3 @@ const ReMarkdown = (props: IReMarkdownProps) => {
 }
 
 export default ReMarkdown
-
-export { IReMarkdownProps }
