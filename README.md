@@ -1,4 +1,4 @@
-**[English](#promarkdown)**    **[Chinese](#中文)**
+**[English](#promarkdown)**    **[中文](#中文)**
 
 # ProMarkdown
 
