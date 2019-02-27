@@ -66,7 +66,6 @@ export interface IProMarkdownProps {
   atUnmounted?: (editor: CodeMirror.Editor, value: string) => any
   atChange?: (editor: CodeMirror.Editor, change: CodeMirror.EditorChange, value: string) => any
   codemirrorOptions?: any
-  menuItemTips?: IMenuItemTips
 }
 
 const EditorStates = {
